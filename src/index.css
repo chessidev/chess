@@ -7,3 +7,8 @@
     @apply bg-dark;
   }
 }
+@layer components {
+  .square {
+    @apply cursor-pointer w-[10vw] max-w-[75px] aspect-square relative;
+  }
+}
