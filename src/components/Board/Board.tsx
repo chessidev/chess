@@ -1,14 +1,12 @@
-const ranks = [8, 7, 6, 5, 4, 3, 2, 1];
-const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
-const filesNumbers = [1, 2, 3, 4, 5, 6, 7, 8];
+import { files, filesNumbers, ranks } from "../Shared/data";
 
 const Board = () => {
   return (
-    <div className="flex items-center justify-center w-full h-screen">
+    <div className="board">
       <div>
         {ranks.map((rank) => {
           return (
-            <div key={rank} className="grid grid-cols-8">
+            <div key={rank} className="rank">
               {files.map((file, index) => {
                 return (
                   <div

@@ -8,6 +8,12 @@
   }
 }
 @layer components {
+  .board {
+    @apply flex flex-col items-center justify-center w-full h-screen;
+  }
+  .rank {
+    @apply grid grid-cols-8;
+  }
   .square {
     @apply cursor-pointer w-[10vw] max-w-[75px] aspect-square relative;
   }
