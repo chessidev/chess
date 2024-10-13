@@ -9,12 +9,12 @@
 }
 @layer components {
   .board {
-    @apply flex flex-col items-center justify-center w-full h-screen;
+    @apply flex flex-col items-center justify-center col-start-1 row-start-1;
   }
   .rank {
     @apply grid grid-cols-8;
   }
   .square {
-    @apply cursor-pointer w-[10vw] max-w-[75px] aspect-square relative;
+    @apply w-[10vw] max-w-[75px] aspect-square relative;
   }
 }

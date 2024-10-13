@@ -25,9 +25,31 @@ const piecesObject: { [k: string]: string } = {
   bk: bk,
 };
 
-const Piece = ({ piece }: { piece: string }) => {
+const Piece = ({
+  piece,
+  fileNumber,
+  rank,
+}: {
+  piece: string;
+  fileNumber: number;
+  rank: number;
+}) => {
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData("data", `${piece},${fileNumber},${rank}`);
+    e.dataTransfer.effectAllowed = "move";
+    (e.target as HTMLElement).style.opacity = "0.4";
+  };
+
   return (
-    <div className="flex items-center justify-center w-full h-full">
+    <div
+      onDragStart={handleDragStart}
+      onDragEnd={(e) => {
+        const target = e.target as HTMLElement;
+        target.style.opacity = "1";
+      }}
+      draggable="true"
+      className="flex items-center justify-center w-full h-full cursor-pointer"
+    >
       <img
         className="block object-cover w-full h-full"
         src={piecesObject[piece]}
