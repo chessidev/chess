@@ -1,13 +1,21 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, Dispatch, useContext, useReducer } from "react";
 import { ReactNode } from "react";
 import { initialState } from "../Data/data";
-import { reducer } from "../reducer/reducer";
+import { Action, reducer, State } from "../reducer/reducer";
 
 interface AppContextProps {
   children: ReactNode;
 }
 
-const appContext = createContext({});
+interface AppProviderValue {
+  appState: State;
+  dispatch: Dispatch<Action>;
+}
+
+const appContext = createContext<AppProviderValue>({
+  appState: initialState,
+  dispatch: () => {},
+});
 
 export const useAppContext = () => {
   return useContext(appContext);

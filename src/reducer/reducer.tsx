@@ -1,10 +1,10 @@
-type State = {
+export type State = {
   positions: string[][];
   turn: string;
   counter: number;
 };
 
-type Action = {
+export type Action = {
   type: string;
   payload: {
     newPositions: string[][];
