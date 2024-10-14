@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 import { ReactNode } from "react";
 import { initialState } from "../Data/data";
-import { reducer } from "../reducer/Reducer";
+import { reducer } from "../reducer/reducer";
 
 interface AppContextProps {
   children: ReactNode;
