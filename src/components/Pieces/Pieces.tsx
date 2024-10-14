@@ -1,10 +1,12 @@
-import { useRef, useState } from "react";
-import { files, filesNumbers, ranks, startingPositions } from "../Shared/data";
+import { useRef } from "react";
+import { files, filesNumbers, ranks } from "../../Data/data";
 import Piece from "./Piece";
+import { useAppContext } from "../../context/AppContext";
+import { makeNewMove } from "../../reducer/actions/move";
 
 const Pieces = () => {
-  const [Positions, setPositions] = useState(startingPositions);
   const boardRef = useRef<HTMLDivElement>(null);
+  const { appState, dispatch } = useAppContext();
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -26,10 +28,10 @@ const Pieces = () => {
     const { x, y } = getCoordinates(e);
     const data = e.dataTransfer.getData("data");
     const [piece, fileNumber, rank] = data.split(",");
-    Positions[Number(rank) - 1][Number(fileNumber) - 1] = "";
-    Positions[y - 1][x - 1] = piece;
-    setPositions([...Positions]);
-    console.log(Positions);
+    const newPositions = appState.positions;
+    newPositions[Number(rank) - 1][Number(fileNumber) - 1] = "";
+    newPositions[y - 1][x - 1] = piece;
+    dispatch(makeNewMove({ newPositions }));
   };
 
   return (
@@ -45,13 +47,16 @@ const Pieces = () => {
             {files.map((file, index) => {
               return (
                 <div key={file + rank} className=" square">
-                  {Positions[rank - 1][filesNumbers[index] - 1] === "" ? (
+                  {appState.positions[rank - 1][filesNumbers[index] - 1] ===
+                  "" ? (
                     ""
                   ) : (
                     <Piece
                       fileNumber={filesNumbers[index]}
                       rank={rank}
-                      piece={Positions[rank - 1][filesNumbers[index] - 1]}
+                      piece={
+                        appState.positions[rank - 1][filesNumbers[index] - 1]
+                      }
                     />
                   )}
                 </div>

@@ -1,14 +1,17 @@
 import Board from "./components/Board/Board";
 import Pieces from "./components/Pieces/Pieces";
+import AppContext from "./context/AppContext";
 
 const App = () => {
   return (
-    <div className="container relative flex items-center justify-center h-screen mx-auto">
-      <div className="grid">
-        <Board />
-        <Pieces />
+    <AppContext>
+      <div className="container relative flex items-center justify-center h-screen mx-auto">
+        <div className="grid">
+          <Board />
+          <Pieces />
+        </div>
       </div>
-    </div>
+    </AppContext>
   );
 };
 

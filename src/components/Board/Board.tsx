@@ -1,4 +1,4 @@
-import { files, filesNumbers, ranks } from "../Shared/data";
+import { files, filesNumbers, ranks } from "../../Data/data";
 
 const Board = () => {
   return (

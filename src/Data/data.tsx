@@ -8,5 +8,9 @@ startingPositions[0] = ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"];
 startingPositions[1] = ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"];
 startingPositions[6] = ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"];
 startingPositions[7] = ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"];
-
-export { ranks, files, filesNumbers, startingPositions };
+const initialState = {
+  positions: startingPositions,
+  turn: "w",
+  counter: 1,
+};
+export { ranks, files, filesNumbers, startingPositions, initialState };
