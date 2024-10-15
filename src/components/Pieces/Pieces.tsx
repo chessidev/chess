@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { files, filesNumbers, ranks } from "../../Data/data";
-import Piece from "./Piece";
 import { useAppContext } from "../../context/AppContext";
 import { makeNewMove } from "../../reducer/actions/move";
+import Piece from "./Piece";
 
 const Pieces = () => {
   const boardRef = useRef<HTMLDivElement>(null);
@@ -28,10 +28,17 @@ const Pieces = () => {
     const { x, y } = getCoordinates(e);
     const data = e.dataTransfer.getData("data");
     const [piece, fileNumber, rank] = data.split(",");
-    const newPositions = appState.positions;
-    newPositions[Number(rank) - 1][Number(fileNumber) - 1] = "";
-    newPositions[y - 1][x - 1] = piece;
-    dispatch(makeNewMove({ newPositions }));
+    if (
+      (x === Number(fileNumber) && y === Number(rank)) ||
+      piece[0] !== appState.turn
+    ) {
+      return;
+    } else {
+      const newPositions = appState.positions;
+      newPositions[Number(rank) - 1][Number(fileNumber) - 1] = "";
+      newPositions[y - 1][x - 1] = piece;
+      dispatch(makeNewMove({ newPositions }));
+    }
   };
 
   return (
