@@ -13,10 +13,12 @@ const initialState = {
   positions: startingPositions,
   turn: "w",
   counter: 1,
+  candidates: [],
 };
 
 const actionTypes = {
   NEW_MOVE: "NEW_MOVE",
+  GET_CANDIDATES: "GET_CANDIDATES",
 };
 
 export { ranks, files, filesNumbers, initialState, actionTypes };

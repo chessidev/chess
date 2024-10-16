@@ -7,6 +7,7 @@
     @apply bg-dark;
   }
 }
+
 @layer components {
   .board {
     @apply flex flex-col items-center justify-center col-start-1 row-start-1;
@@ -16,5 +17,14 @@
   }
   .square {
     @apply w-[10vw] max-w-[75px] aspect-square relative;
+  }
+}
+
+@layer utilities {
+  .highlight {
+    @apply before:w-1/2 before:rounded-full before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-black before:opacity-10 before:absolute before:inset-0 before:h-1/2;
+  }
+  .attack {
+    @apply before:w-[90%] before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:border-[0.4rem] before:border-black/10 before:absolute before:inset-0 before:h-[90%];
   }
 }

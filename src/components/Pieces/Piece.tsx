@@ -10,6 +10,9 @@ import bn from "../../assets/bn.png";
 import br from "../../assets/br.png";
 import bq from "../../assets/bq.png";
 import bk from "../../assets/bk.png";
+import { useAppContext } from "../../context/AppContext";
+import { getMoves } from "../../arbiter/getMoves";
+import { getCandidates } from "../../reducer/actions/move";
 const piecesObject: { [k: string]: string } = {
   wp: wp,
   wb: wb,
@@ -34,10 +37,26 @@ const Piece = ({
   fileNumber: number;
   rank: number;
 }) => {
+  const {
+    appState: { positions, turn },
+    dispatch,
+  } = useAppContext();
+
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData("data", `${piece},${fileNumber},${rank}`);
     e.dataTransfer.effectAllowed = "move";
     (e.target as HTMLElement).style.opacity = "0.4";
+    if (piece[0] === turn) {
+      const moves = getMoves({
+        piece,
+        file: fileNumber,
+        rank,
+        positions,
+        turn,
+      });
+      // console.log(moves);
+      dispatch(getCandidates({ candidates: moves }));
+    }
   };
 
   return (

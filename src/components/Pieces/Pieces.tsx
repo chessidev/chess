@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { files, filesNumbers, ranks } from "../../Data/data";
 import { useAppContext } from "../../context/AppContext";
-import { makeNewMove } from "../../reducer/actions/move";
+import { getCandidates, makeNewMove } from "../../reducer/actions/move";
 import Piece from "./Piece";
 
 const Pieces = () => {
@@ -25,11 +25,12 @@ const Pieces = () => {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
+    dispatch(getCandidates({ candidates: [] }));
     const { x, y } = getCoordinates(e);
     const data = e.dataTransfer.getData("data");
     const [piece, fileNumber, rank] = data.split(",");
     if (
-      (x === Number(fileNumber) && y === Number(rank)) ||
+      !appState.candidates.find(([file, rank]) => x === file && y === rank) ||
       piece[0] !== appState.turn
     ) {
       return;
@@ -39,6 +40,17 @@ const Pieces = () => {
       newPositions[y - 1][x - 1] = piece;
       dispatch(makeNewMove({ newPositions }));
     }
+  };
+
+  const getClassName = (x: number, y: number) => {
+    if (
+      appState.candidates.find(
+        (candidate) => candidate[0] === x && candidate[1] === y
+      )
+    ) {
+      if (appState.positions[y - 1][x - 1] === "") return "highlight";
+      else return "attack";
+    } else return "";
   };
 
   return (
@@ -53,7 +65,13 @@ const Pieces = () => {
           <div key={rank} className="rank">
             {files.map((file, index) => {
               return (
-                <div key={file + rank} className=" square">
+                <div
+                  key={file + rank}
+                  className={`square ${getClassName(
+                    filesNumbers[index],
+                    rank
+                  )}`}
+                >
                   {appState.positions[rank - 1][filesNumbers[index] - 1] ===
                   "" ? (
                     ""
