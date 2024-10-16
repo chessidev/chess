@@ -21,14 +21,14 @@ export const reducer = (state: State, action: Action) => {
       return {
         ...state,
         turn: state.turn === "w" ? "b" : "w",
-        positions: action.payload.newPositions,
+        positions: action.payload.newPositions || state.positions,
         counter: state.turn === "w" ? state.counter : state.counter + 1,
       };
 
     case actionTypes.GET_CANDIDATES: {
       return {
         ...state,
-        candidates: action.payload.candidates,
+        candidates: action.payload.candidates || [],
       };
     }
 
