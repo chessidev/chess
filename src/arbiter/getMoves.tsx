@@ -17,6 +17,15 @@ export const getMoves = (params: GetMoves) => {
       ];
       return calcMoves(params, directions, "board");
     }
+    case "b": {
+      const directions = [
+        [1, 1],
+        [-1, 1],
+        [-1, -1],
+        [1, -1],
+      ];
+      return calcMoves(params, directions, "board");
+    }
 
     default:
       return [];
