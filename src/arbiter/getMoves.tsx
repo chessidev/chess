@@ -26,6 +26,45 @@ export const getMoves = (params: GetMoves) => {
       ];
       return calcMoves(params, directions, "board");
     }
+    case "n": {
+      const directions = [
+        [1, 2],
+        [-1, 2],
+        [1, -2],
+        [-1, -2],
+        [2, 1],
+        [-2, 1],
+        [-2, -1],
+        [2, -1],
+      ];
+      return calcMoves(params, directions, "step");
+    }
+    case "q": {
+      const directions = [
+        [1, 0],
+        [0, 1],
+        [-1, 0],
+        [0, -1],
+        [1, 1],
+        [-1, 1],
+        [-1, -1],
+        [1, -1],
+      ];
+      return calcMoves(params, directions, "board");
+    }
+    case "k": {
+      const directions = [
+        [1, 0],
+        [0, 1],
+        [-1, 0],
+        [0, -1],
+        [1, 1],
+        [-1, 1],
+        [-1, -1],
+        [1, -1],
+      ];
+      return calcMoves(params, directions, "step");
+    }
 
     default:
       return [];
