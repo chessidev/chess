@@ -65,7 +65,10 @@ export const getMoves = (params: GetMoves) => {
       ];
       return calcMoves(params, directions, "step");
     }
-
+    case "p": {
+      const directions = params.turn === "w" ? [[0, 1]] : [[0, -1]];
+      return calcPawnMoves(params, directions);
+    }
     default:
       return [];
   }
@@ -100,5 +103,31 @@ const calcMoves = (
       }
     }
   });
+  return moves;
+};
+
+const calcPawnMoves = (
+  { rank, file, positions, turn }: GetMoves,
+  directions: number[][]
+) => {
+  const moves: [number, number][] = [];
+  const enemy = turn === "w" ? "b" : "w";
+  const step = rank === (turn === "w" ? 2 : 7) ? 3 : 2;
+  directions.forEach(([x, y]) => {
+    for (let i = 1; i < step; i++) {
+      const newFile = file + i * x;
+      const newRank = rank + i * y;
+      if (positions[newRank - 1]?.[newFile - 1] === "") {
+        moves.push([newFile, newRank]);
+      }
+    }
+  });
+
+  if (
+    positions[rank + (turn === "w" ? 1 : -1) - 1]?.[file + 1 - 1]?.[0] === enemy
+  ) {
+    moves.push([file + 1, rank + (turn === "w" ? 1 : -1)]);
+  }
+
   return moves;
 };
