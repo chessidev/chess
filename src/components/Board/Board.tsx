@@ -1,4 +1,4 @@
-import { files, filesNumbers, ranks } from "../../Data/data";
+import { files, filesNumbers, ranks } from "../../Data/ranksAndFiles";
 
 const Board = () => {
   return (

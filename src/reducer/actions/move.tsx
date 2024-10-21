@@ -1,5 +1,5 @@
-import { actionTypes } from "../../Data/data";
-import { Action } from "../reducer";
+import { actionTypes } from "../../Data/actionTypes";
+import { Action } from "../../Data/interfaces";
 
 export const makeNewMove = ({
   newPositions,

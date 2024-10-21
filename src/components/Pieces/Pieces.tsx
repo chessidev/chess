@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { files, filesNumbers, ranks } from "../../Data/data";
+import { files, filesNumbers, ranks } from "../../Data/ranksAndFiles";
 import { useAppContext } from "../../context/AppContext";
 import { getCandidates, makeNewMove } from "../../reducer/actions/move";
 import Piece from "./Piece";
@@ -7,6 +7,7 @@ import Piece from "./Piece";
 const Pieces = () => {
   const boardRef = useRef<HTMLDivElement>(null);
   const { appState, dispatch } = useAppContext();
+  const { candidates, turn, positions } = appState;
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -30,25 +31,22 @@ const Pieces = () => {
     const data = e.dataTransfer.getData("data");
     const [piece, fileNumber, rank] = data.split(",");
     if (
-      !appState.candidates.find(([file, rank]) => x === file && y === rank) ||
-      piece[0] !== appState.turn
+      candidates.find(([file, rank]) => x === file && y === rank) &&
+      piece[0] === turn
     ) {
-      return;
-    } else {
-      const newPositions = appState.positions;
+      const newPositions = positions[positions.length - 1];
       newPositions[Number(rank) - 1][Number(fileNumber) - 1] = "";
       newPositions[y - 1][x - 1] = piece;
       dispatch(makeNewMove({ newPositions }));
-    }
+    } else return;
   };
 
   const getClassName = (x: number, y: number) => {
     if (
-      appState.candidates.find(
-        (candidate) => candidate[0] === x && candidate[1] === y
-      )
+      candidates.find((candidate) => candidate[0] === x && candidate[1] === y)
     ) {
-      if (appState.positions[y - 1][x - 1] === "") return "highlight";
+      if (positions[positions.length - 1][y - 1][x - 1] === "")
+        return "highlight";
       else return "attack";
     } else return "";
   };
@@ -72,15 +70,18 @@ const Pieces = () => {
                     rank
                   )}`}
                 >
-                  {appState.positions[rank - 1][filesNumbers[index] - 1] ===
-                  "" ? (
+                  {positions[positions.length - 1][rank - 1][
+                    filesNumbers[index] - 1
+                  ] === "" ? (
                     ""
                   ) : (
                     <Piece
                       fileNumber={filesNumbers[index]}
                       rank={rank}
                       piece={
-                        appState.positions[rank - 1][filesNumbers[index] - 1]
+                        positions[positions.length - 1][rank - 1][
+                          filesNumbers[index] - 1
+                        ]
                       }
                     />
                   )}

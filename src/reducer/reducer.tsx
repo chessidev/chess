@@ -1,29 +1,18 @@
-import { actionTypes } from "../Data/data";
+import { actionTypes } from "../Data/actionTypes";
+import { Action, State } from "../Data/interfaces";
 
-export type State = {
-  positions: string[][];
-  turn: string;
-  counter: number;
-  candidates: [number, number][];
-};
-
-export type Action = {
-  type: string;
-  payload: {
-    newPositions?: string[][];
-    candidates?: [number, number][];
-  };
-};
-
-export const reducer = (state: State, action: Action) => {
+export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case actionTypes.NEW_MOVE:
-      return {
-        ...state,
-        turn: state.turn === "w" ? "b" : "w",
-        positions: action.payload.newPositions || state.positions,
-        counter: state.turn === "w" ? state.counter : state.counter + 1,
-      };
+      if (!action.payload.newPositions) {
+        return state;
+      } else
+        return {
+          ...state,
+          turn: state.turn === "w" ? "b" : "w",
+          positions: [...state.positions, action.payload.newPositions],
+          counter: state.turn === "w" ? state.counter : state.counter + 1,
+        };
 
     case actionTypes.GET_CANDIDATES: {
       return {
