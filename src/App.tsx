@@ -1,6 +1,6 @@
 import Board from "./components/Board/Board";
+import AppContext from "./components/context/AppContext";
 import Pieces from "./components/Pieces/Pieces";
-import AppContext from "./context/AppContext";
 
 const App = () => {
   return (

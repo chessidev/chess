@@ -32,5 +32,22 @@ export const calcPawnMoves = (
     moves.push([file - 1, rank + (turn === "w" ? 1 : -1)]);
   }
 
+  // En passant
+  const lastPositions = positions[positions.length - 2];
+  if (
+    currentPosition[rank - 1]?.[file - 1 - 1] === `${enemy}p` &&
+    lastPositions[rank - 1]?.[file - 1 - 1] === "" &&
+    lastPositions[rank - 1 - 1]?.[file - 1 - 1] === ""
+  ) {
+    moves.push([file - 1, rank + (turn === "w" ? 1 : -1)]);
+  }
+  if (
+    currentPosition[rank - 1]?.[file - 1 + 1] === `${enemy}p` &&
+    lastPositions[rank - 1]?.[file - 1 + 1] === "" &&
+    lastPositions[rank - 1 - 1]?.[file - 1 + 1] === ""
+  ) {
+    moves.push([file + 1, rank + (turn === "w" ? 1 : -1)]);
+  }
+
   return moves;
 };

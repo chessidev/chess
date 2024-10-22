@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { files, filesNumbers, ranks } from "../../Data/ranksAndFiles";
-import { useAppContext } from "../../context/AppContext";
-import { getCandidates, makeNewMove } from "../../reducer/actions/move";
 import Piece from "./Piece";
+import { useAppContext } from "../context/AppContext";
+import { performMove } from "../../arbiter/performMove";
 
 const Pieces = () => {
   const boardRef = useRef<HTMLDivElement>(null);
@@ -26,19 +26,17 @@ const Pieces = () => {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
-    dispatch(getCandidates({ candidates: [] }));
-    const { x, y } = getCoordinates(e);
     const data = e.dataTransfer.getData("data");
-    const [piece, fileNumber, rank] = data.split(",");
-    if (
-      candidates.find(([file, rank]) => x === file && y === rank) &&
-      piece[0] === turn
-    ) {
-      const newPositions = positions[positions.length - 1];
-      newPositions[Number(rank) - 1][Number(fileNumber) - 1] = "";
-      newPositions[y - 1][x - 1] = piece;
-      dispatch(makeNewMove({ newPositions }));
-    } else return;
+    const { x, y } = getCoordinates(e);
+    performMove({
+      data,
+      x,
+      y,
+      positions: positions[positions.length - 1],
+      candidates,
+      turn,
+      dispatch,
+    });
   };
 
   const getClassName = (x: number, y: number) => {

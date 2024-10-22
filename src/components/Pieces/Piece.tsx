@@ -11,8 +11,8 @@ import br from "../../assets/br.png";
 import bq from "../../assets/bq.png";
 import bk from "../../assets/bk.png";
 import { getMoves } from "../../arbiter/arbiter";
-import { useAppContext } from "../../context/AppContext";
 import { getCandidates } from "../../reducer/actions/move";
+import { useAppContext } from "../context/AppContext";
 const piecesObject: { [k: string]: string } = {
   wp: wp,
   wb: wb,

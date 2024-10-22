@@ -2,7 +2,7 @@ import { Dispatch, ReactNode } from "react";
 
 interface State {
   positions: string[][][];
-  turn: string;
+  turn: "w" | "b";
   counter: number;
   candidates: [number, number][];
 }
@@ -23,10 +23,25 @@ interface GetMoves {
 interface AppContextProps {
   children: ReactNode;
 }
-
 interface AppProviderValue {
   appState: State;
   dispatch: Dispatch<Action>;
 }
+interface performMoveParam {
+  data: string;
+  x: number;
+  y: number;
+  positions: string[][];
+  candidates: [number, number][];
+  turn: "w" | "b";
+  dispatch: (arg0: Action) => void;
+}
 
-export type { GetMoves, AppContextProps, AppProviderValue, State, Action };
+export type {
+  GetMoves,
+  AppContextProps,
+  AppProviderValue,
+  State,
+  Action,
+  performMoveParam,
+};
