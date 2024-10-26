@@ -9,8 +9,8 @@ export const reducer = (state: State, action: Action): State => {
       } else
         return {
           ...state,
-          turn: state.turn === "w" ? "b" : "w",
           positions: [...state.positions, action.payload.newPositions],
+          turn: state.turn === "w" ? "b" : "w",
           counter: state.turn === "w" ? state.counter : state.counter + 1,
         };
 
@@ -19,6 +19,32 @@ export const reducer = (state: State, action: Action): State => {
         ...state,
         candidates: action.payload.candidates || [],
       };
+    }
+
+    case actionTypes.PROMOTE: {
+      if (!action.payload.promotion || !action.payload.newPositions) {
+        return state;
+      } else
+        return {
+          ...state,
+          isPromotion: true,
+          promotion: action.payload.promotion,
+          positions: [...state.positions, action.payload.newPositions],
+        };
+    }
+
+    case actionTypes.PROMOTION_DONE: {
+      if (!action.payload.newPositions) {
+        return state;
+      } else
+        return {
+          ...state,
+          isPromotion: false,
+          promotion: { x: 0, y: 0 },
+          positions: [...state.positions, action.payload.newPositions],
+          turn: state.turn === "w" ? "b" : "w",
+          counter: state.turn === "w" ? state.counter : state.counter + 1,
+        };
     }
 
     default:

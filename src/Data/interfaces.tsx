@@ -5,12 +5,21 @@ interface State {
   turn: "w" | "b";
   counter: number;
   candidates: [number, number][];
+  isPromotion: boolean;
+  promotion: {
+    x: number;
+    y: number;
+  };
 }
 interface Action {
   type: string;
   payload: {
     newPositions?: string[][];
     candidates?: [number, number][];
+    promotion?: {
+      x: number;
+      y: number;
+    };
   };
 }
 interface GetMoves {
@@ -36,6 +45,13 @@ interface performMoveParam {
   turn: "w" | "b";
   dispatch: (arg0: Action) => void;
 }
+interface PromotionParam {
+  x: number;
+  y: number;
+  piece: string;
+  positions: string[][];
+  dispatch: (arg0: Action) => void;
+}
 
 export type {
   GetMoves,
@@ -44,4 +60,5 @@ export type {
   State,
   Action,
   performMoveParam,
+  PromotionParam,
 };

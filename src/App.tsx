@@ -1,6 +1,7 @@
 import Board from "./components/Board/Board";
 import AppContext from "./components/context/AppContext";
 import Pieces from "./components/Pieces/Pieces";
+import PromotionBox from "./components/PromotionBox/PromotionBox";
 
 const App = () => {
   return (
@@ -9,6 +10,7 @@ const App = () => {
         <div className="grid">
           <Board />
           <Pieces />
+          <PromotionBox />
         </div>
       </div>
     </AppContext>

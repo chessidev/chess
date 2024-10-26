@@ -22,3 +22,32 @@ export const getCandidates = ({
     payload: { candidates },
   };
 };
+
+export const promote = ({
+  x,
+  y,
+  piece,
+  newPositions,
+}: {
+  x: number;
+  y: number;
+  piece: string;
+  newPositions: string[][];
+}): Action => {
+  const promotion = { x, y, piece };
+  return {
+    type: actionTypes.PROMOTE,
+    payload: { promotion, newPositions },
+  };
+};
+
+export const promotionDone = ({
+  newPositions,
+}: {
+  newPositions: string[][];
+}): Action => {
+  return {
+    type: actionTypes.PROMOTION_DONE,
+    payload: { newPositions },
+  };
+};

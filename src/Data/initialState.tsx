@@ -13,6 +13,11 @@ const initialState: State = {
   turn: "w",
   counter: 1,
   candidates: [],
+  isPromotion: false,
+  promotion: {
+    x: 0,
+    y: 0,
+  },
 };
 
 export default initialState;

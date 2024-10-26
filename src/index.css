@@ -18,6 +18,18 @@
   .square {
     @apply w-[10vw] max-w-[75px] aspect-square relative;
   }
+  .pieceImageContainer {
+    @apply flex items-center justify-center w-full h-full cursor-pointer;
+  }
+  .pieceImage {
+    @apply block object-cover w-full aspect-square;
+  }
+  .promotionImageContainer {
+    @apply transition-colors duration-300 rounded-full bg-gradient-radial from-gray-100 to-gray-400 hover:from-orange-100 hover:to-orange-600 pieceImageContainer hover:rounded-none;
+  }
+  .promotionImage {
+    @apply pieceImage max-w-[90%] duration-300;
+  }
 }
 
 @layer utilities {

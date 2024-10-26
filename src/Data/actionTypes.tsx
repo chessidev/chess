@@ -1,4 +1,6 @@
 export const actionTypes = {
   NEW_MOVE: "NEW_MOVE",
   GET_CANDIDATES: "GET_CANDIDATES",
+  PROMOTE: "PROMOTE",
+  PROMOTION_DONE: "PROMOTION_DONE",
 };

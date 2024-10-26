@@ -67,13 +67,9 @@ const Piece = ({
         dispatch(getCandidates({ candidates: [] }));
       }}
       draggable="true"
-      className="flex items-center justify-center w-full h-full cursor-pointer"
+      className="pieceImageContainer"
     >
-      <img
-        className="block object-cover w-full h-full"
-        src={piecesObject[piece]}
-        alt={piece}
-      />
+      <img className="pieceImage" src={piecesObject[piece]} alt={piece} />
     </div>
   );
 };
