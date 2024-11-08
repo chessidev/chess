@@ -4,6 +4,7 @@ import {
   makeNewMove,
   promote,
   promotionDone,
+  updateCastle,
 } from "../reducer/actions/move";
 
 export const performMove = ({
@@ -13,6 +14,7 @@ export const performMove = ({
   positions,
   candidates,
   turn,
+  castle,
   dispatch,
 }: performMoveParam) => {
   const [piece, fileString, rankString] = data.split(",");
@@ -35,6 +37,17 @@ export const performMove = ({
       else if (x === fileNumber - 1) newPositions[rank - 1][x - 1] = "";
     }
 
+    // Castle
+    if (piece[1] === "k" && Math.abs(fileNumber - x) >= 2) {
+      if (x === 7) {
+        newPositions[y - 1][5] = newPositions[y - 1][7];
+        newPositions[y - 1][7] = "";
+      } else if (x === 3) {
+        newPositions[y - 1][3] = newPositions[y - 1][0];
+        newPositions[y - 1][0] = "";
+      }
+    }
+
     // All Pieces
     newPositions[rank - 1][fileNumber - 1] = "";
     newPositions[y - 1][x - 1] = piece;
@@ -43,6 +56,94 @@ export const performMove = ({
     if (piece[1] === "p" && (y === 1 || y === 8)) {
       dispatch(promote({ x, y, piece, newPositions }));
     } else dispatch(makeNewMove({ newPositions }));
+
+    // stop castle
+
+    // for king
+    if (piece[1] === "k") {
+      if (turn === "w")
+        dispatch(
+          updateCastle({
+            castle: {
+              ...castle,
+              w: {
+                king: false,
+                queen: false,
+              },
+            },
+          })
+        );
+      else if (turn === "b") {
+        dispatch(
+          updateCastle({
+            castle: {
+              ...castle,
+              b: {
+                king: false,
+                queen: false,
+              },
+            },
+          })
+        );
+      }
+    }
+
+    // for rook
+    if (piece[1] === "r") {
+      if (turn === "w") {
+        if (fileNumber === 1) {
+          dispatch(
+            updateCastle({
+              castle: {
+                ...castle,
+                w: {
+                  king: castle.w.king,
+                  queen: false,
+                },
+              },
+            })
+          );
+        } else if (fileNumber === 8) {
+          dispatch(
+            updateCastle({
+              castle: {
+                ...castle,
+                w: {
+                  king: false,
+                  queen: castle.w.queen,
+                },
+              },
+            })
+          );
+        }
+      } else if (turn === "b") {
+        if (fileNumber === 1) {
+          dispatch(
+            updateCastle({
+              castle: {
+                ...castle,
+                b: {
+                  king: castle.b.king,
+                  queen: false,
+                },
+              },
+            })
+          );
+        } else if (fileNumber === 8) {
+          dispatch(
+            updateCastle({
+              castle: {
+                ...castle,
+                b: {
+                  king: false,
+                  queen: castle.b.queen,
+                },
+              },
+            })
+          );
+        }
+      }
+    }
   }
   dispatch(getCandidates({ candidates: [] }));
 };

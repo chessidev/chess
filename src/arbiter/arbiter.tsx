@@ -1,6 +1,6 @@
 import { GetMoves } from "../Data/interfaces";
 import piecesDirections from "../Data/piecesDirections";
-import { calcMoves } from "./calcMoves";
+import { calcMoves, checkCastle } from "./calcMoves";
 import { calcPawnMoves } from "./calcPawnMoves";
 
 export const getMoves = (params: GetMoves) => {
@@ -23,7 +23,9 @@ export const getMoves = (params: GetMoves) => {
     }
     case "k": {
       const directions = piecesDirections.k;
-      return calcMoves(params, directions, "step");
+      const moves = calcMoves(params, directions, "step");
+      const castleMoves: [number, number][] = checkCastle(params);
+      return [...moves, ...castleMoves];
     }
     case "p": {
       const directions =

@@ -32,3 +32,30 @@ export const calcMoves = (
   });
   return moves;
 };
+
+export const checkCastle = (params: GetMoves): [number, number][] => {
+  const turn = params.turn;
+  const castleMoves: [number, number][] = [];
+  const currentPositions = params.positions[params.positions.length - 1];
+  const rank = turn === "w" ? 1 : 8;
+
+  if (params.castle[turn as "w" | "b"].king) {
+    if (
+      currentPositions[rank - 1][5] === "" &&
+      currentPositions[rank - 1][6] === ""
+    ) {
+      castleMoves.push([7, rank]);
+    }
+  }
+
+  if (params.castle[turn as "w" | "b"].queen) {
+    if (
+      currentPositions[rank - 1][1] === "" &&
+      currentPositions[rank - 1][2] === "" &&
+      currentPositions[rank - 1][3] === ""
+    ) {
+      castleMoves.push([3, rank]);
+    }
+  }
+  return castleMoves;
+};

@@ -35,6 +35,7 @@ const Pieces = () => {
       positions: positions[positions.length - 1],
       candidates,
       turn,
+      castle: appState.castle,
       dispatch,
     });
   };

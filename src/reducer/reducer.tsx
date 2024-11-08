@@ -47,6 +47,17 @@ export const reducer = (state: State, action: Action): State => {
         };
     }
 
+    case actionTypes.UPDATE_CASTLE: {
+      // TODO
+      if (!action.payload.castle) {
+        return state;
+      } else
+        return {
+          ...state,
+          castle: action.payload.castle,
+        };
+    }
+
     default:
       return state;
   }

@@ -1,5 +1,5 @@
 import { actionTypes } from "../../Data/actionTypes";
-import { Action } from "../../Data/interfaces";
+import { Action, castle } from "../../Data/interfaces";
 
 export const makeNewMove = ({
   newPositions,
@@ -49,5 +49,12 @@ export const promotionDone = ({
   return {
     type: actionTypes.PROMOTION_DONE,
     payload: { newPositions },
+  };
+};
+
+export const updateCastle = ({ castle }: { castle: castle }) => {
+  return {
+    type: actionTypes.UPDATE_CASTLE,
+    payload: { castle },
   };
 };
