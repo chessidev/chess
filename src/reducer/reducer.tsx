@@ -48,13 +48,22 @@ export const reducer = (state: State, action: Action): State => {
     }
 
     case actionTypes.UPDATE_CASTLE: {
-      // TODO
       if (!action.payload.castle) {
         return state;
       } else
         return {
           ...state,
           castle: action.payload.castle,
+        };
+    }
+
+    case actionTypes.IS_KING_CHECKED: {
+      if (action.payload.isKingChecked === undefined) {
+        return state;
+      } else
+        return {
+          ...state,
+          isKingChecked: action.payload.isKingChecked,
         };
     }
 

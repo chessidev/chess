@@ -1,7 +1,8 @@
 import { GetMoves } from "../Data/interfaces";
+import { getIsKingInCheck } from "./arbiter";
 
 export const calcMoves = (
-  { rank, file, positions, turn }: GetMoves,
+  { rank, file, positions, turn, piece }: GetMoves,
   directions: number[][],
   range: "step" | "board"
 ) => {
@@ -23,9 +24,27 @@ export const calcMoves = (
         break;
       }
       if (currentPosition[newRank - 1]?.[newFile - 1] === "") {
-        moves.push([newFile, newRank]);
+        if (
+          isValidMoveWRTCheck({
+            currentPosition,
+            move: { newRank, newFile },
+            piece,
+            rank,
+            file,
+          })
+        )
+          moves.push([newFile, newRank]);
       } else if (currentPosition[newRank - 1]?.[newFile - 1]?.[0] === enemy) {
-        moves.push([newFile, newRank]);
+        if (
+          isValidMoveWRTCheck({
+            currentPosition,
+            move: { newRank, newFile },
+            piece,
+            rank,
+            file,
+          })
+        )
+          moves.push([newFile, newRank]);
         break;
       }
     }
@@ -34,28 +53,82 @@ export const calcMoves = (
 };
 
 export const checkCastle = (params: GetMoves): [number, number][] => {
-  const turn = params.turn;
+  const { turn, positions, isKingChecked } = params;
   const castleMoves: [number, number][] = [];
-  const currentPositions = params.positions[params.positions.length - 1];
+  const currentPosition = positions[params.positions.length - 1];
   const rank = turn === "w" ? 1 : 8;
 
-  if (params.castle[turn as "w" | "b"].king) {
-    if (
-      currentPositions[rank - 1][5] === "" &&
-      currentPositions[rank - 1][6] === ""
-    ) {
-      castleMoves.push([7, rank]);
+  if (!isKingChecked) {
+    if (params.castle[turn as "w" | "b"].king) {
+      if (
+        currentPosition[rank - 1][5] === "" &&
+        currentPosition[rank - 1][6] === "" &&
+        isValidMoveWRTCheck({
+          currentPosition,
+          move: { newRank: rank, newFile: 6 },
+          piece: `${turn}k`,
+          rank,
+          file: 5,
+        }) &&
+        isValidMoveWRTCheck({
+          currentPosition,
+          move: { newRank: rank, newFile: 7 },
+          piece: `${turn}k`,
+          rank,
+          file: 5,
+        })
+      ) {
+        castleMoves.push([7, rank]);
+      }
     }
-  }
 
-  if (params.castle[turn as "w" | "b"].queen) {
-    if (
-      currentPositions[rank - 1][1] === "" &&
-      currentPositions[rank - 1][2] === "" &&
-      currentPositions[rank - 1][3] === ""
-    ) {
-      castleMoves.push([3, rank]);
+    if (params.castle[turn as "w" | "b"].queen) {
+      if (
+        currentPosition[rank - 1][1] === "" &&
+        currentPosition[rank - 1][2] === "" &&
+        currentPosition[rank - 1][3] === "" &&
+        isValidMoveWRTCheck({
+          currentPosition,
+          move: { newRank: rank, newFile: 4 },
+          piece: `${turn}k`,
+          rank,
+          file: 5,
+        }) &&
+        isValidMoveWRTCheck({
+          currentPosition,
+          move: { newRank: rank, newFile: 3 },
+          piece: `${turn}k`,
+          rank,
+          file: 5,
+        })
+      ) {
+        castleMoves.push([3, rank]);
+      }
     }
   }
   return castleMoves;
+};
+
+export const isValidMoveWRTCheck = ({
+  currentPosition,
+  move,
+  piece,
+  rank,
+  file,
+}: {
+  currentPosition: string[][];
+  move: { newRank: number; newFile: number };
+  piece: string;
+  rank: number;
+  file: number;
+}) => {
+  const { newRank, newFile } = move;
+  const newPosition = currentPosition.map((rank) => rank.map((file) => file));
+  newPosition[newRank - 1][newFile - 1] = piece;
+  newPosition[rank - 1][file - 1] = "";
+  const isKingInCheck = getIsKingInCheck({
+    turn: piece[0],
+    currentPosition: newPosition,
+  });
+  return !isKingInCheck;
 };

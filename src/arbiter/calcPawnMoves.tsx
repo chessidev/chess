@@ -1,7 +1,8 @@
 import { GetMoves } from "../Data/interfaces";
+import { isValidMoveWRTCheck } from "./calcMoves";
 
 export const calcPawnMoves = (
-  { rank, file, positions, turn }: GetMoves,
+  { rank, file, positions, turn, piece }: GetMoves,
   directions: number[][]
 ) => {
   const moves: [number, number][] = [];
@@ -13,7 +14,16 @@ export const calcPawnMoves = (
       const newFile = file + i * x;
       const newRank = rank + i * y;
       if (currentPosition[newRank - 1]?.[newFile - 1] === "") {
-        moves.push([newFile, newRank]);
+        if (
+          isValidMoveWRTCheck({
+            currentPosition,
+            move: { newRank, newFile },
+            piece,
+            rank,
+            file,
+          })
+        )
+          moves.push([newFile, newRank]);
       }
     }
   });
@@ -23,13 +33,31 @@ export const calcPawnMoves = (
     currentPosition[rank + (turn === "w" ? 1 : -1) - 1]?.[file + 1 - 1]?.[0] ===
     enemy
   ) {
-    moves.push([file + 1, rank + (turn === "w" ? 1 : -1)]);
+    if (
+      isValidMoveWRTCheck({
+        currentPosition,
+        move: { newRank: rank + (turn === "w" ? 1 : -1), newFile: file + 1 },
+        piece,
+        rank,
+        file,
+      })
+    )
+      moves.push([file + 1, rank + (turn === "w" ? 1 : -1)]);
   }
   if (
     currentPosition[rank + (turn === "w" ? 1 : -1) - 1]?.[file - 1 - 1]?.[0] ===
     enemy
   ) {
-    moves.push([file - 1, rank + (turn === "w" ? 1 : -1)]);
+    if (
+      isValidMoveWRTCheck({
+        currentPosition,
+        move: { newRank: rank + (turn === "w" ? 1 : -1), newFile: file - 1 },
+        piece,
+        rank,
+        file,
+      })
+    )
+      moves.push([file - 1, rank + (turn === "w" ? 1 : -1)]);
   }
 
   // En passant
@@ -39,14 +67,32 @@ export const calcPawnMoves = (
     lastPositions[rank - 1]?.[file - 1 - 1] === "" &&
     lastPositions[rank - 1 - 1]?.[file - 1 - 1] === ""
   ) {
-    moves.push([file - 1, rank + (turn === "w" ? 1 : -1)]);
+    if (
+      isValidMoveWRTCheck({
+        currentPosition,
+        move: { newRank: rank + (turn === "w" ? 1 : -1), newFile: file - 1 },
+        piece,
+        rank,
+        file,
+      })
+    )
+      moves.push([file - 1, rank + (turn === "w" ? 1 : -1)]);
   }
   if (
     currentPosition[rank - 1]?.[file - 1 + 1] === `${enemy}p` &&
     lastPositions[rank - 1]?.[file - 1 + 1] === "" &&
     lastPositions[rank - 1 - 1]?.[file - 1 + 1] === ""
   ) {
-    moves.push([file + 1, rank + (turn === "w" ? 1 : -1)]);
+    if (
+      isValidMoveWRTCheck({
+        currentPosition,
+        move: { newRank: rank + (turn === "w" ? 1 : -1), newFile: file + 1 },
+        piece,
+        rank,
+        file,
+      })
+    )
+      moves.push([file + 1, rank + (turn === "w" ? 1 : -1)]);
   }
 
   return moves;

@@ -10,16 +10,8 @@ interface State {
     x: number;
     y: number;
   };
-  castle: {
-    w: {
-      king: boolean;
-      queen: boolean;
-    };
-    b: {
-      king: boolean;
-      queen: boolean;
-    };
-  };
+  castle: Castle;
+  isKingChecked: boolean;
 }
 interface Action {
   type: string;
@@ -30,16 +22,8 @@ interface Action {
       x: number;
       y: number;
     };
-    castle?: {
-      w: {
-        king: boolean;
-        queen: boolean;
-      };
-      b: {
-        king: boolean;
-        queen: boolean;
-      };
-    };
+    castle?: Castle;
+    isKingChecked?: boolean;
   };
 }
 interface GetMoves {
@@ -48,16 +32,8 @@ interface GetMoves {
   file: number;
   positions: string[][][];
   turn: string;
-  castle: {
-    w: {
-      king: boolean;
-      queen: boolean;
-    };
-    b: {
-      king: boolean;
-      queen: boolean;
-    };
-  };
+  castle: Castle;
+  isKingChecked: boolean;
 }
 interface AppContextProps {
   children: ReactNode;
@@ -73,16 +49,7 @@ interface performMoveParam {
   positions: string[][];
   candidates: [number, number][];
   turn: "w" | "b";
-  castle: {
-    w: {
-      king: boolean;
-      queen: boolean;
-    };
-    b: {
-      king: boolean;
-      queen: boolean;
-    };
-  };
+  castle: Castle;
   dispatch: (arg0: Action) => void;
 }
 interface PromotionParam {
@@ -92,7 +59,7 @@ interface PromotionParam {
   positions: string[][];
   dispatch: (arg0: Action) => void;
 }
-interface castle {
+interface Castle {
   w: {
     king: boolean;
     queen: boolean;
@@ -111,5 +78,5 @@ export type {
   Action,
   performMoveParam,
   PromotionParam,
-  castle,
+  Castle,
 };

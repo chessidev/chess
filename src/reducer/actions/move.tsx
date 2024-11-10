@@ -1,5 +1,5 @@
 import { actionTypes } from "../../Data/actionTypes";
-import { Action, castle } from "../../Data/interfaces";
+import { Action, Castle } from "../../Data/interfaces";
 
 export const makeNewMove = ({
   newPositions,
@@ -52,9 +52,20 @@ export const promotionDone = ({
   };
 };
 
-export const updateCastle = ({ castle }: { castle: castle }) => {
+export const updateCastle = ({ castle }: { castle: Castle }) => {
   return {
     type: actionTypes.UPDATE_CASTLE,
     payload: { castle },
+  };
+};
+
+export const isKingInCheck = ({
+  isKingChecked,
+}: {
+  isKingChecked: boolean;
+}) => {
+  return {
+    type: actionTypes.IS_KING_CHECKED,
+    payload: { isKingChecked },
   };
 };

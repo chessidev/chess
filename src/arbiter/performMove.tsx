@@ -55,7 +55,7 @@ export const performMove = ({
     // Promotion
     if (piece[1] === "p" && (y === 1 || y === 8)) {
       dispatch(promote({ x, y, piece, newPositions }));
-    } else dispatch(makeNewMove({ newPositions }));
+    }
 
     // stop castle
 
@@ -144,7 +144,12 @@ export const performMove = ({
         }
       }
     }
+
+    // End of turn if no promotion
+    if (!(piece[1] === "p" && (y === 1 || y === 8)))
+      dispatch(makeNewMove({ newPositions }));
   }
+
   dispatch(getCandidates({ candidates: [] }));
 };
 

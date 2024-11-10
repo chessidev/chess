@@ -1,8 +1,10 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { files, filesNumbers, ranks } from "../../Data/ranksAndFiles";
 import Piece from "./Piece";
 import { useAppContext } from "../context/AppContext";
 import { performMove } from "../../arbiter/performMove";
+import { getIsKingInCheck } from "../../arbiter/arbiter";
+import { isKingInCheck } from "../../reducer/actions/move";
 
 const Pieces = () => {
   const boardRef = useRef<HTMLDivElement>(null);
@@ -41,14 +43,30 @@ const Pieces = () => {
   };
 
   const getClassName = (x: number, y: number) => {
+    let className = "";
     if (
       candidates.find((candidate) => candidate[0] === x && candidate[1] === y)
     ) {
       if (positions[positions.length - 1][y - 1][x - 1] === "")
-        return "highlight";
-      else return "attack";
-    } else return "";
+        className += " highlight";
+      else className += " attack";
+    }
+    if (
+      positions[positions.length - 1][y - 1][x - 1] === `${turn}k` &&
+      appState.isKingChecked
+    ) {
+      className += " check";
+    }
+    return className;
   };
+
+  useEffect(() => {
+    const isKingChecked = getIsKingInCheck({
+      currentPosition: positions[positions.length - 1],
+      turn,
+    });
+    dispatch(isKingInCheck({ isKingChecked }));
+  }, [turn, dispatch, positions]);
 
   return (
     <div

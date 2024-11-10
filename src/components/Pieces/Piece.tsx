@@ -38,7 +38,7 @@ const Piece = ({
   rank: number;
 }) => {
   const {
-    appState: { positions, turn, castle },
+    appState: { positions, turn, castle, isKingChecked },
     dispatch,
   } = useAppContext();
 
@@ -54,6 +54,7 @@ const Piece = ({
         positions,
         turn,
         castle,
+        isKingChecked,
       });
       dispatch(getCandidates({ candidates: moves }));
     }
