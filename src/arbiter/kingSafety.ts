@@ -11,7 +11,7 @@ const getIsKingInCheck = ({
 }) => {
   const king = `${turn}k`;
   const kingPosition = getPiecePosition(currentPosition, king);
-  if (!kingPosition) {
+  if (kingPosition.rank === 0 || kingPosition.file === 0) {
     throw new Error("King position not found");
   }
   const { rank, file } = kingPosition;
@@ -98,6 +98,27 @@ const getIsKingInCheck = ({
     `${enemy}p`
   ) {
     return true;
+  }
+  // is king threatening the king
+  const kingDirections = piecesDirections.k;
+  const kingstep = 2;
+  for (const [x, y] of kingDirections) {
+    for (let i = 1; i < kingstep; i++) {
+      const newFile = file + i * x;
+      const newRank = rank + i * y;
+      if (
+        newFile < 1 ||
+        newFile > 8 ||
+        newRank < 1 ||
+        newRank > 8 ||
+        currentPosition[newRank - 1]?.[newFile - 1]?.[0] === turn
+      ) {
+        break;
+      }
+      if (currentPosition[newRank - 1]?.[newFile - 1] === `${enemy}k`) {
+        return true;
+      }
+    }
   }
 
   return false;

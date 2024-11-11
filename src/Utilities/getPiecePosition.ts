@@ -9,4 +9,5 @@ export const getPiecePosition = (
       }
     }
   }
+  return { rank: 0, file: 0 };
 };

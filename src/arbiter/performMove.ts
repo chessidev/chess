@@ -1,12 +1,17 @@
-import { performMoveParam, PromotionParam } from "../Data/interfaces";
+import { Moves, performMoveParam, PromotionParam } from "../Data/interfaces";
 import {
+  enPassant,
   getCandidates,
   makeNewMove,
   promote,
   promotionDone,
   updateCastle,
+  updateDraw50,
+  updatePositionsHistory,
 } from "../Reducer/actions";
 import { copyPositionsArray } from "../Utilities/copyPositionsArray";
+import { generatePositionKey } from "../Utilities/generatePositionKey";
+import { getEnPassantMoves } from "./calcPawnMoves";
 
 const performMove = ({
   data,
@@ -15,18 +20,23 @@ const performMove = ({
   positions,
   candidates,
   turn,
+  counter,
   castle,
   dispatch,
+  enPassantSquares,
+  positionsHistory,
 }: performMoveParam) => {
   const [piece, fileString, rankString] = data.split(",");
   const rank = Number(rankString);
   const fileNumber = Number(fileString);
+  const enemy = turn === "w" ? "b" : "w";
 
   if (
     candidates.find(([file, rank]) => x === file && y === rank) &&
     piece[0] === turn
   ) {
-    const newPositions = copyPositionsArray(positions);
+    const currentPosition = positions[positions.length - 1];
+    const newPositions = copyPositionsArray(currentPosition);
 
     // En Passant
     if (
@@ -146,8 +156,54 @@ const performMove = ({
     }
 
     // End of turn if no promotion
-    if (!(piece[1] === "p" && (y === 1 || y === 8)))
+    if (!(piece[1] === "p" && (y === 1 || y === 8))) {
+      // 50 move rule
+      if (currentPosition[y - 1][x - 1]?.[0] === enemy || piece[1] === "p") {
+        const newCounter50 = enemy === "w" ? counter + 1 : counter;
+        dispatch(updateDraw50({ counter50: newCounter50, turn: enemy }));
+      }
+
+      // enPassantSquares update
+      let possibleEnPassantSquare: Moves = [];
+      if (piece[1] === "p" && Math.abs(rank - y) === 2) {
+        const fileForFutureEnPassant =
+          newPositions[y - 1][x - 1 - 1] === `${enemy}p`
+            ? x - 1
+            : newPositions[y - 1][x + 1 - 1] === `${enemy}p`
+            ? x + 1
+            : 0;
+        if (fileForFutureEnPassant) {
+          possibleEnPassantSquare = getEnPassantMoves({
+            positions: [...positions, newPositions],
+            rank: y,
+            file: fileForFutureEnPassant,
+            turn: enemy,
+            piece: `${enemy}p`,
+          });
+        }
+        console.log(possibleEnPassantSquare);
+      }
+      if (
+        JSON.stringify(possibleEnPassantSquare) !==
+        JSON.stringify(enPassantSquares)
+      ) {
+        dispatch(enPassant({ enPassantSquares: possibleEnPassantSquare }));
+      }
+
+      // positionsHistory update
+      const newKey = generatePositionKey({
+        position: newPositions,
+        turn: enemy,
+        castle,
+        enPassantSquares: possibleEnPassantSquare,
+      });
+      if (positionsHistory[newKey]) positionsHistory[newKey] += 1;
+      else positionsHistory[newKey] = 1;
+      dispatch(updatePositionsHistory({ positionsHistory }));
+
+      // move done
       dispatch(makeNewMove({ newPositions }));
+    }
   }
 
   dispatch(getCandidates({ candidates: [] }));
@@ -159,9 +215,32 @@ const performPromotion = ({
   piece,
   positions,
   dispatch,
+  turn,
+  counter,
+  castle,
+  positionsHistory,
 }: PromotionParam) => {
   const newPositions = copyPositionsArray(positions);
+  const enemy = turn === "w" ? "b" : "w";
+
   newPositions[y - 1][x - 1] = piece;
+  const newCounter50 = enemy === "w" ? counter + 1 : counter;
+
+  dispatch(updateDraw50({ counter50: newCounter50, turn: enemy }));
+  dispatch(enPassant({ enPassantSquares: [] }));
+
+  // positionsHistory update
+  const newKey = generatePositionKey({
+    position: newPositions,
+    turn: enemy,
+    castle,
+    enPassantSquares: [],
+  });
+  if (positionsHistory[newKey]) positionsHistory[newKey] += 1;
+  else positionsHistory[newKey] = 1;
+  dispatch(updatePositionsHistory({ positionsHistory }));
+
+  // move done
   dispatch(promotionDone({ newPositions }));
 };
 

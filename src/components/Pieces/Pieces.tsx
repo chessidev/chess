@@ -3,13 +3,24 @@ import { files, filesNumbers, ranks } from "../../Data/ranksAndFiles";
 import Piece from "./Piece";
 import { useAppContext } from "../context/AppContext";
 import { performMove } from "../../arbiter/performMove";
-import { isKingInCheck } from "../../Reducer/actions";
+import { changeStatus, isKingInCheck } from "../../Reducer/actions";
 import { getIsKingInCheck } from "../../arbiter/kingSafety";
+import { getGameStatus } from "../../arbiter/getGameStatus";
 
 const Pieces = () => {
   const boardRef = useRef<HTMLDivElement>(null);
   const { appState, dispatch } = useAppContext();
-  const { candidates, turn, positions } = appState;
+  const {
+    candidates,
+    turn,
+    positions,
+    gameStatus,
+    castle,
+    counter,
+    draw50,
+    enPassantSquares,
+    positionsHistory,
+  } = appState;
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -34,11 +45,14 @@ const Pieces = () => {
       data,
       x,
       y,
-      positions: positions[positions.length - 1],
+      positions,
       candidates,
       turn,
       castle: appState.castle,
       dispatch,
+      counter: appState.counter,
+      enPassantSquares,
+      positionsHistory,
     });
   };
 
@@ -61,12 +75,26 @@ const Pieces = () => {
   };
 
   useEffect(() => {
+    const currentPosition = positions[positions.length - 1];
     const isKingChecked = getIsKingInCheck({
-      currentPosition: positions[positions.length - 1],
+      currentPosition,
       turn,
     });
-    dispatch(isKingInCheck({ isKingChecked }));
-  }, [turn, dispatch, positions]);
+
+    if (isKingChecked !== appState.isKingChecked)
+      dispatch(isKingInCheck({ isKingChecked }));
+
+    const status = getGameStatus({
+      isKingChecked,
+      positions,
+      turn,
+      castle,
+      draw50,
+      counter,
+      positionsHistory,
+    });
+    if (status !== gameStatus) dispatch(changeStatus({ gameStatus: status }));
+  }, [turn]);
 
   return (
     <div

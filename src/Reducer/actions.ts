@@ -62,6 +62,38 @@ const isKingInCheck = ({ isKingChecked }: { isKingChecked: boolean }) => {
   };
 };
 
+const changeStatus = ({ gameStatus }: { gameStatus: string }) => {
+  return {
+    type: actionTypes.CHANGE_STATUS,
+    payload: { gameStatus },
+  };
+};
+
+const updateDraw50 = (draw50: { counter50: number; turn: "w" | "b" }) => {
+  return {
+    type: actionTypes.UPDATE_DRAW50,
+    payload: { draw50 },
+  };
+};
+
+const enPassant = ({ enPassantSquares }: { enPassantSquares: Moves }) => {
+  return {
+    type: actionTypes.EN_PASSANT,
+    payload: { enPassantSquares },
+  };
+};
+
+const updatePositionsHistory = ({
+  positionsHistory,
+}: {
+  positionsHistory: { [key: string]: number };
+}) => {
+  return {
+    type: actionTypes.UPDATE_POSITIONS_HISTORY,
+    payload: { positionsHistory },
+  };
+};
+
 export {
   makeNewMove,
   getCandidates,
@@ -69,4 +101,8 @@ export {
   promotionDone,
   updateCastle,
   isKingInCheck,
+  changeStatus,
+  updateDraw50,
+  enPassant,
+  updatePositionsHistory,
 };

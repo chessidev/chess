@@ -37,7 +37,7 @@
     @apply before:w-1/2 before:rounded-full before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-black before:opacity-10 before:absolute before:inset-0 before:h-1/2;
   }
   .attack {
-    @apply before:w-[90%] before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:border-[0.4rem] before:border-black/10 before:absolute before:inset-0 before:h-[90%];
+    @apply before:w-[90%] before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:border-[0.4rem] before:border-black/20 before:absolute before:inset-0 before:h-[90%];
   }
   .check {
     @apply before:w-full before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:absolute before:h-full before:z-[-1] before:bg-gradient-radial from-red-100 to-red-600;

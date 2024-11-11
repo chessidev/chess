@@ -23,9 +23,12 @@ const piecesObject: { [k: string]: string } = {
 const PromotionBox = () => {
   const {
     appState: {
+      counter,
       positions,
       turn,
       isPromotion,
+      castle,
+      positionsHistory,
       promotion: { x: promotionFile, y: promotionRank },
     },
     dispatch,
@@ -43,6 +46,10 @@ const PromotionBox = () => {
       piece: target.id as string,
       positions: positions[positions.length - 1],
       dispatch,
+      turn,
+      counter,
+      castle,
+      positionsHistory,
     });
   };
 

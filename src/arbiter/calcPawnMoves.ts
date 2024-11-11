@@ -1,7 +1,7 @@
-import { GetMoves, Moves } from "../Data/interfaces";
+import { getEnPassantMovesParam, GetMoves, Moves } from "../Data/interfaces";
 import { isValidMoveWRTCheck } from "./kingSafety";
 
-export const calcPawnMoves = (
+const calcPawnMoves = (
   { rank, file, positions, turn, piece }: GetMoves,
   directions: number[][]
 ) => {
@@ -55,12 +55,33 @@ export const calcPawnMoves = (
   )
     moves.push([file - 1, rank + (turn === "w" ? 1 : -1)]);
 
-  // En passant
+  const enPassantMoves = getEnPassantMoves({
+    positions,
+    rank,
+    file,
+    turn,
+    piece,
+  });
+
+  return [...moves, ...enPassantMoves];
+};
+
+const getEnPassantMoves = ({
+  positions,
+  rank,
+  file,
+  turn,
+  piece,
+}: getEnPassantMovesParam) => {
+  const moves: Moves = [];
+  const enemy = turn === "w" ? "b" : "w";
+  const currentPosition = positions[positions.length - 1];
   const lastPositions = positions[positions.length - 2];
+
   if (
     currentPosition[rank - 1]?.[file - 1 - 1] === `${enemy}p` &&
     lastPositions[rank - 1]?.[file - 1 - 1] === "" &&
-    lastPositions[rank - 1 - 1]?.[file - 1 - 1] === "" &&
+    lastPositions[rank + (turn === "w" ? 1 : -1) - 1]?.[file - 1 - 1] === "" &&
     isValidMoveWRTCheck({
       currentPosition,
       move: { newRank: rank + (turn === "w" ? 1 : -1), newFile: file - 1 },
@@ -74,7 +95,7 @@ export const calcPawnMoves = (
   if (
     currentPosition[rank - 1]?.[file - 1 + 1] === `${enemy}p` &&
     lastPositions[rank - 1]?.[file - 1 + 1] === "" &&
-    lastPositions[rank - 1 - 1]?.[file - 1 + 1] === "" &&
+    lastPositions[rank + (turn === "w" ? 1 : -1) - 1]?.[file - 1 + 1] === "" &&
     isValidMoveWRTCheck({
       currentPosition,
       move: { newRank: rank + (turn === "w" ? 1 : -1), newFile: file + 1 },
@@ -87,3 +108,5 @@ export const calcPawnMoves = (
 
   return moves;
 };
+
+export { calcPawnMoves, getEnPassantMoves };

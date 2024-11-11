@@ -1,3 +1,5 @@
+import { generatePositionKey } from "../Utilities/generatePositionKey";
+import { Status } from "./gameStatus";
 import { State } from "./interfaces";
 
 const startingPositions = new Array(8)
@@ -5,21 +7,26 @@ const startingPositions = new Array(8)
   .map(() => new Array(8).fill(""));
 
 // actual starting positions
-// startingPositions[0] = ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"];
-// startingPositions[1] = ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"];
-// startingPositions[6] = ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"];
-// startingPositions[7] = ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"];
+startingPositions[0] = ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"];
+startingPositions[1] = ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"];
+startingPositions[6] = ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"];
+startingPositions[7] = ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"];
 
 // testing starting positions
-startingPositions[0] = ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"];
-startingPositions[1] = ["", "", "", "", "", "", "", ""];
-startingPositions[6] = ["", "", "", "", "", "", "", ""];
-startingPositions[7] = ["br", "bn", "bb", "bq", "bk", "", "", "br"];
+// startingPositions[0] = ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"];
+// startingPositions[1] = ["", "", "", "", "", "", "", ""];
+// startingPositions[6] = ["", "", "", "", "", "", "", ""];
+// startingPositions[7] = ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"];
 
+// actual initialState
 const initialState: State = {
   positions: [startingPositions],
   turn: "w",
   counter: 1,
+  draw50: {
+    counter50: 1,
+    turn: "w",
+  },
   candidates: [],
   isPromotion: false,
   promotion: {
@@ -37,6 +44,16 @@ const initialState: State = {
     },
   },
   isKingChecked: false,
+  gameStatus: Status.ongoing,
+  enPassantSquares: [],
+  positionsHistory: {},
 };
+const startingKey = generatePositionKey({
+  position: startingPositions,
+  turn: "w",
+  castle: initialState.castle,
+  enPassantSquares: initialState.enPassantSquares,
+});
+initialState.positionsHistory[startingKey] = 1;
 
 export default initialState;

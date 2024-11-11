@@ -26,7 +26,7 @@ export const checkCastle = (params: GetMoves): Moves => {
           rank,
           file: 5,
         })
-      ) 
+      )
         castleMoves.push([7, rank]);
     }
 
@@ -49,7 +49,7 @@ export const checkCastle = (params: GetMoves): Moves => {
           rank,
           file: 5,
         })
-      ) 
+      )
         castleMoves.push([3, rank]);
     }
   }

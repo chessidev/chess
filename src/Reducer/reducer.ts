@@ -67,6 +67,43 @@ export const reducer = (state: State, action: Action): State => {
         };
     }
 
+    case actionTypes.CHANGE_STATUS: {
+      if (!action.payload.gameStatus) {
+        return state;
+      } else
+        return {
+          ...state,
+          gameStatus: action.payload.gameStatus,
+        };
+    }
+
+    case actionTypes.UPDATE_DRAW50: {
+      if (!action.payload.draw50) {
+        return state;
+      } else
+        return {
+          ...state,
+          draw50: action.payload.draw50,
+        };
+    }
+
+    case actionTypes.EN_PASSANT: {
+      return {
+        ...state,
+        enPassantSquares: action.payload.enPassantSquares || [],
+      };
+    }
+
+    case actionTypes.UPDATE_POSITIONS_HISTORY: {
+      if (!action.payload.positionsHistory) {
+        return state;
+      } else
+        return {
+          ...state,
+          positionsHistory: action.payload.positionsHistory,
+        };
+    }
+
     default:
       return state;
   }
