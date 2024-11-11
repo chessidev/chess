@@ -10,8 +10,8 @@ import bn from "../../assets/bn.png";
 import br from "../../assets/br.png";
 import bq from "../../assets/bq.png";
 import bk from "../../assets/bk.png";
-import { getMoves } from "../../arbiter/arbiter";
-import { getCandidates } from "../../reducer/actions/move";
+import { getMoves } from "../../arbiter/getMoves";
+import { getCandidates } from "../../Reducer/actions";
 import { useAppContext } from "../context/AppContext";
 const piecesObject: { [k: string]: string } = {
   wp: wp,

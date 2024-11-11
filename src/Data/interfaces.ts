@@ -4,7 +4,7 @@ interface State {
   positions: string[][][];
   turn: "w" | "b";
   counter: number;
-  candidates: [number, number][];
+  candidates: Moves;
   isPromotion: boolean;
   promotion: {
     x: number;
@@ -17,7 +17,7 @@ interface Action {
   type: string;
   payload: {
     newPositions?: string[][];
-    candidates?: [number, number][];
+    candidates?: Moves;
     promotion?: {
       x: number;
       y: number;
@@ -47,7 +47,7 @@ interface performMoveParam {
   x: number;
   y: number;
   positions: string[][];
-  candidates: [number, number][];
+  candidates: Moves;
   turn: "w" | "b";
   castle: Castle;
   dispatch: (arg0: Action) => void;
@@ -69,6 +69,7 @@ interface Castle {
     queen: boolean;
   };
 }
+type Moves = [number, number][];
 
 export type {
   GetMoves,
@@ -79,4 +80,5 @@ export type {
   performMoveParam,
   PromotionParam,
   Castle,
+  Moves,
 };

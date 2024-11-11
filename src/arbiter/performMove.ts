@@ -5,9 +5,10 @@ import {
   promote,
   promotionDone,
   updateCastle,
-} from "../reducer/actions/move";
+} from "../Reducer/actions";
+import { copyPositionsArray } from "../Utilities/copyPositionsArray";
 
-export const performMove = ({
+const performMove = ({
   data,
   x,
   y,
@@ -20,11 +21,12 @@ export const performMove = ({
   const [piece, fileString, rankString] = data.split(",");
   const rank = Number(rankString);
   const fileNumber = Number(fileString);
+
   if (
     candidates.find(([file, rank]) => x === file && y === rank) &&
     piece[0] === turn
   ) {
-    const newPositions = positions.map((rank) => rank.map((file) => file));
+    const newPositions = copyPositionsArray(positions);
 
     // En Passant
     if (
@@ -58,7 +60,6 @@ export const performMove = ({
     }
 
     // stop castle
-
     // for king
     if (piece[1] === "k") {
       if (turn === "w")
@@ -87,7 +88,6 @@ export const performMove = ({
         );
       }
     }
-
     // for rook
     if (piece[1] === "r") {
       if (turn === "w") {
@@ -153,14 +153,16 @@ export const performMove = ({
   dispatch(getCandidates({ candidates: [] }));
 };
 
-export const performPromotion = ({
+const performPromotion = ({
   x,
   y,
   piece,
   positions,
   dispatch,
 }: PromotionParam) => {
-  const newPositions = positions.map((rank) => rank.map((file) => file));
+  const newPositions = copyPositionsArray(positions);
   newPositions[y - 1][x - 1] = piece;
   dispatch(promotionDone({ newPositions }));
 };
+
+export { performMove, performPromotion };

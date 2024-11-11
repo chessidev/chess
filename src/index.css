@@ -10,7 +10,7 @@
 
 @layer components {
   .board {
-    @apply flex flex-col items-center justify-center col-start-1 row-start-1;
+    @apply flex flex-col items-center justify-center col-start-1 row-start-1 select-none;
   }
   .rank {
     @apply grid grid-cols-8;

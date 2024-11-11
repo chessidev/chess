@@ -1,7 +1,7 @@
-import { actionTypes } from "../../Data/actionTypes";
-import { Action, Castle } from "../../Data/interfaces";
+import { actionTypes } from "../Data/actionTypes";
+import { Action, Castle, Moves } from "../Data/interfaces";
 
-export const makeNewMove = ({
+const makeNewMove = ({
   newPositions,
 }: {
   newPositions: string[][];
@@ -12,18 +12,14 @@ export const makeNewMove = ({
   };
 };
 
-export const getCandidates = ({
-  candidates,
-}: {
-  candidates: [number, number][];
-}): Action => {
+const getCandidates = ({ candidates }: { candidates: Moves }): Action => {
   return {
     type: actionTypes.GET_CANDIDATES,
     payload: { candidates },
   };
 };
 
-export const promote = ({
+const promote = ({
   x,
   y,
   piece,
@@ -41,7 +37,7 @@ export const promote = ({
   };
 };
 
-export const promotionDone = ({
+const promotionDone = ({
   newPositions,
 }: {
   newPositions: string[][];
@@ -52,20 +48,25 @@ export const promotionDone = ({
   };
 };
 
-export const updateCastle = ({ castle }: { castle: Castle }) => {
+const updateCastle = ({ castle }: { castle: Castle }) => {
   return {
     type: actionTypes.UPDATE_CASTLE,
     payload: { castle },
   };
 };
 
-export const isKingInCheck = ({
-  isKingChecked,
-}: {
-  isKingChecked: boolean;
-}) => {
+const isKingInCheck = ({ isKingChecked }: { isKingChecked: boolean }) => {
   return {
     type: actionTypes.IS_KING_CHECKED,
     payload: { isKingChecked },
   };
+};
+
+export {
+  makeNewMove,
+  getCandidates,
+  promote,
+  promotionDone,
+  updateCastle,
+  isKingInCheck,
 };

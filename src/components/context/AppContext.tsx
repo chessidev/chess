@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 import { AppContextProps, AppProviderValue } from "../../Data/interfaces";
 import initialState from "../../Data/initialState";
-import { reducer } from "../../reducer/reducer";
+import { reducer } from "../../Reducer/reducer";
 
 const appContext = createContext<AppProviderValue>({
   appState: initialState,

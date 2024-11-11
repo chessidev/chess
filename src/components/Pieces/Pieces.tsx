@@ -3,8 +3,8 @@ import { files, filesNumbers, ranks } from "../../Data/ranksAndFiles";
 import Piece from "./Piece";
 import { useAppContext } from "../context/AppContext";
 import { performMove } from "../../arbiter/performMove";
-import { getIsKingInCheck } from "../../arbiter/arbiter";
-import { isKingInCheck } from "../../reducer/actions/move";
+import { isKingInCheck } from "../../Reducer/actions";
+import { getIsKingInCheck } from "../../arbiter/kingSafety";
 
 const Pieces = () => {
   const boardRef = useRef<HTMLDivElement>(null);

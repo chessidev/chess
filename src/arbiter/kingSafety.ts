@@ -1,43 +1,8 @@
-import { GetMoves } from "../Data/interfaces";
 import piecesDirections from "../Data/piecesDirections";
-import { calcMoves, checkCastle } from "./calcMoves";
-import { calcPawnMoves } from "./calcPawnMoves";
+import { copyPositionsArray } from "../Utilities/copyPositionsArray";
+import { getPiecePosition } from "../Utilities/getPiecePosition";
 
-export const getMoves = (params: GetMoves) => {
-  switch (params.piece[1]) {
-    case "r": {
-      const directions = piecesDirections.r;
-      return calcMoves(params, directions, "board");
-    }
-    case "b": {
-      const directions = piecesDirections.b;
-      return calcMoves(params, directions, "board");
-    }
-    case "n": {
-      const directions = piecesDirections.n;
-      return calcMoves(params, directions, "step");
-    }
-    case "q": {
-      const directions = piecesDirections.q;
-      return calcMoves(params, directions, "board");
-    }
-    case "k": {
-      const directions = piecesDirections.k;
-      const moves = calcMoves(params, directions, "step");
-      const castleMoves: [number, number][] = checkCastle(params);
-      return [...moves, ...castleMoves];
-    }
-    case "p": {
-      const directions =
-        params.turn === "w" ? piecesDirections.wp : piecesDirections.bp;
-      return calcPawnMoves(params, directions);
-    }
-    default:
-      return [];
-  }
-};
-
-export const getIsKingInCheck = ({
+const getIsKingInCheck = ({
   turn,
   currentPosition,
 }: {
@@ -50,7 +15,7 @@ export const getIsKingInCheck = ({
     throw new Error("King position not found");
   }
   const { rank, file } = kingPosition;
-  // TODO: is queen rook is threatening the king
+  // is queen or rook is threatening the king
   const rookDirections = piecesDirections.r;
   const rookstep = 8;
   const enemy = turn === "w" ? "b" : "w";
@@ -64,18 +29,18 @@ export const getIsKingInCheck = ({
         newRank < 1 ||
         newRank > 8 ||
         currentPosition[newRank - 1]?.[newFile - 1]?.[0] === turn
-      ) {
+      )
         break;
-      }
       if (
         currentPosition[newRank - 1]?.[newFile - 1] === `${enemy}r` ||
         currentPosition[newRank - 1]?.[newFile - 1] === `${enemy}q`
-      ) {
+      )
         return true;
-      }
+      else if (currentPosition[newRank - 1]?.[newFile - 1]?.[0] === enemy)
+        break;
     }
   }
-  // TODO: is queen bishop is threatening the king
+  // is queen or bishop is threatening the king
   const bishopDirections = piecesDirections.b;
   const bishopstep = 8;
   for (const [x, y] of bishopDirections) {
@@ -94,12 +59,13 @@ export const getIsKingInCheck = ({
       if (
         currentPosition[newRank - 1]?.[newFile - 1] === `${enemy}b` ||
         currentPosition[newRank - 1]?.[newFile - 1] === `${enemy}q`
-      ) {
+      )
         return true;
-      }
+      else if (currentPosition[newRank - 1]?.[newFile - 1]?.[0] === enemy)
+        break;
     }
   }
-  // TODO: is knight threatening the king
+  // is knight threatening the king
   const knightDirections = piecesDirections.n;
   const knightstep = 2;
   for (const [x, y] of knightDirections) {
@@ -120,7 +86,7 @@ export const getIsKingInCheck = ({
       }
     }
   }
-  // TODO: is pawn threatening the king
+  // is pawn threatening the king
   if (
     currentPosition[rank + (turn === "w" ? 1 : -1) - 1]?.[file + 1 - 1] ===
     `${enemy}p`
@@ -137,15 +103,28 @@ export const getIsKingInCheck = ({
   return false;
 };
 
-export const getPiecePosition = (
-  currentPositions: string[][],
-  piece: string
-) => {
-  for (let rank = 1; rank <= 8; rank++) {
-    for (let file = 1; file <= 8; file++) {
-      if (currentPositions[rank - 1][file - 1] === piece) {
-        return { rank, file };
-      }
-    }
-  }
+const isValidMoveWRTCheck = ({
+  currentPosition,
+  move,
+  piece,
+  rank,
+  file,
+}: {
+  currentPosition: string[][];
+  move: { newRank: number; newFile: number };
+  piece: string;
+  rank: number;
+  file: number;
+}) => {
+  const { newRank, newFile } = move;
+  const newPosition = copyPositionsArray(currentPosition);
+  newPosition[newRank - 1][newFile - 1] = piece;
+  newPosition[rank - 1][file - 1] = "";
+  const isKingInCheck = getIsKingInCheck({
+    turn: piece[0],
+    currentPosition: newPosition,
+  });
+  return !isKingInCheck;
 };
+
+export { isValidMoveWRTCheck, getIsKingInCheck };
