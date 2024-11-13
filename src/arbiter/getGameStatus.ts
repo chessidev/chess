@@ -1,7 +1,6 @@
 import { Status } from "../Data/gameStatus";
 import { GameStatusParams } from "../Data/interfaces";
 import { getPiecePosition } from "../Utilities/getPiecePosition";
-import { getMoves } from "./getMoves";
 const unclaimedRepetition: {
   [key: string]: number;
 } = {};
@@ -16,6 +15,16 @@ export const getGameStatus = ({
 }: GameStatusParams) => {
   const currentPosition = positions[positions.length - 1];
   const pieces = currentPosition.flat().filter((p) => p);
+
+  console.log(
+    isKingChecked,
+    positions,
+    turn,
+    castle,
+    draw50,
+    counter,
+    positionsHistory
+  );
 
   // insufficient material
   if (
