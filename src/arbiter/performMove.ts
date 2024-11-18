@@ -181,7 +181,6 @@ const performMove = ({
             piece: `${enemy}p`,
           });
         }
-        console.log(possibleEnPassantSquare);
       }
       if (
         JSON.stringify(possibleEnPassantSquare) !==

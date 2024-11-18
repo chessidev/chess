@@ -94,6 +94,20 @@ const updatePositionsHistory = ({
   };
 };
 
+const resetTheGame = () => {
+  return {
+    type: actionTypes.RESET_GAME,
+    payload: {},
+  };
+};
+
+const claimDraw = () => {
+  return {
+    type: actionTypes.CLAIM_DRAW,
+    payload: {},
+  };
+};
+
 export {
   makeNewMove,
   getCandidates,
@@ -105,4 +119,6 @@ export {
   updateDraw50,
   enPassant,
   updatePositionsHistory,
+  resetTheGame,
+  claimDraw,
 };

@@ -1,6 +1,7 @@
 import { Status } from "../Data/gameStatus";
 import { GameStatusParams } from "../Data/interfaces";
 import { getPiecePosition } from "../Utilities/getPiecePosition";
+import { getMoves } from "./getMoves";
 const unclaimedRepetition: {
   [key: string]: number;
 } = {};
@@ -14,30 +15,28 @@ export const getGameStatus = ({
   positionsHistory,
 }: GameStatusParams) => {
   const currentPosition = positions[positions.length - 1];
-  const pieces = currentPosition.flat().filter((p) => p);
+  const pieces: { piece: string; rank: number; file: number }[] = [];
 
-  console.log(
-    isKingChecked,
-    positions,
-    turn,
-    castle,
-    draw50,
-    counter,
-    positionsHistory
+  currentPosition.forEach((row, r) =>
+    row.forEach((piece, f) =>
+      piece && (piece.startsWith("b") || piece.startsWith("w"))
+        ? pieces.push({ piece, rank: r + 1, file: f + 1 })
+        : null
+    )
   );
 
   // insufficient material
   if (
     pieces.length === 2 ||
     (pieces.length === 3 &&
-      pieces.some((p) => p.endsWith("n") || p.endsWith("b")))
+      pieces.some((p) => p.piece.endsWith("n") || p.piece.endsWith("b")))
   ) {
     return Status.insufficientMaterial;
   }
   if (
     pieces.length === 4 &&
-    pieces.some((p) => p === "wb") &&
-    pieces.some((p) => p === "bb")
+    pieces.some((p) => p.piece === "wb") &&
+    pieces.some((p) => p.piece === "bb")
   ) {
     const { rank: wbRank, file: wbFile } = getPiecePosition(
       currentPosition,
@@ -60,6 +59,28 @@ export const getGameStatus = ({
     )
       bbColor = "dark";
     if (wbColor === bbColor) return Status.insufficientMaterial;
+  }
+
+  // stalemate and checkmate
+  const ourPieces = pieces.filter((p) => p.piece[0] === turn);
+  const moves = [];
+  for (const p of ourPieces) {
+    moves.push(
+      ...getMoves({
+        rank: p.rank,
+        file: p.file,
+        piece: p.piece,
+        positions,
+        turn,
+        isKingChecked,
+        castle,
+      })
+    );
+    if (moves.length) break;
+  }
+  if (!moves.length) {
+    if (isKingChecked) return turn === "w" ? Status.blackWin : Status.whiteWin;
+    else return Status.stalemate;
   }
 
   // 50 move rule

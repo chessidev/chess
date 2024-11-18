@@ -21,6 +21,7 @@ interface State {
   positionsHistory: {
     [key: string]: number;
   };
+  drawClaimed: boolean;
 }
 interface Action {
   type: string;

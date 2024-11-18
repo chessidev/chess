@@ -4,13 +4,16 @@
 
 @layer base {
   body {
-    @apply bg-dark;
+    @apply select-none bg-dark;
+  }
+  button {
+    @apply px-4 py-2 font-semibold duration-200 border-2 rounded border-primary hover:text-secondary hover:bg-primary text-primary disabled:hover:text-primary disabled:hover:bg-transparent disabled:cursor-not-allowed disabled:opacity-50;
   }
 }
 
 @layer components {
   .board {
-    @apply flex flex-col items-center justify-center col-start-1 row-start-1 select-none;
+    @apply flex flex-col items-center justify-center col-start-1 row-start-1;
   }
   .rank {
     @apply grid grid-cols-8;

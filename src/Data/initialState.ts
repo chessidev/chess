@@ -13,10 +13,10 @@ startingPositions[6] = ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"];
 startingPositions[7] = ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"];
 
 // testing starting positions
-// startingPositions[0] = ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"];
+// startingPositions[0] = ["wr", "", "", "wq", "wk", "", "", "wr"];
 // startingPositions[1] = ["", "", "", "", "", "", "", ""];
 // startingPositions[6] = ["", "", "", "", "", "", "", ""];
-// startingPositions[7] = ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"];
+// startingPositions[7] = ["", "", "", "", "bk", "", "", ""];
 
 // actual initialState
 const initialState: State = {
@@ -47,6 +47,7 @@ const initialState: State = {
   gameStatus: Status.ongoing,
   enPassantSquares: [],
   positionsHistory: {},
+  drawClaimed: false,
 };
 const startingKey = generatePositionKey({
   position: startingPositions,

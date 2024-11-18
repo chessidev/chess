@@ -1,4 +1,5 @@
 import { actionTypes } from "../Data/actionTypes";
+import initialState from "../Data/initialState";
 import { Action, State } from "../Data/interfaces";
 
 export const reducer = (state: State, action: Action): State => {
@@ -102,6 +103,17 @@ export const reducer = (state: State, action: Action): State => {
           ...state,
           positionsHistory: action.payload.positionsHistory,
         };
+    }
+
+    case actionTypes.RESET_GAME: {
+      return initialState;
+    }
+
+    case actionTypes.CLAIM_DRAW: {
+      return {
+        ...state,
+        drawClaimed: true,
+      };
     }
 
     default:
