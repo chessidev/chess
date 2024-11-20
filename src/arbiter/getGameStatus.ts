@@ -1,10 +1,9 @@
 import { Status } from "../Data/gameStatus";
 import { GameStatusParams } from "../Data/interfaces";
+import { editUnclaimedRepetition } from "../Reducer/actions";
 import { getPiecePosition } from "../Utilities/getPiecePosition";
 import { getMoves } from "./getMoves";
-const unclaimedRepetition: {
-  [key: string]: number;
-} = {};
+
 export const getGameStatus = ({
   isKingChecked,
   positions,
@@ -13,6 +12,8 @@ export const getGameStatus = ({
   draw50,
   counter,
   positionsHistory,
+  unclaimedRepetition,
+  dispatch,
 }: GameStatusParams) => {
   const currentPosition = positions[positions.length - 1];
   const pieces: { piece: string; rank: number; file: number }[] = [];
@@ -97,9 +98,11 @@ export const getGameStatus = ({
     if (keyCounter >= 3) {
       if (!unclaimedRepetition[key]) {
         unclaimedRepetition[key] = keyCounter;
+        dispatch(editUnclaimedRepetition({ unclaimedRepetition }));
         return Status.threefoldRepetition;
       } else if (unclaimedRepetition[key] !== keyCounter) {
         unclaimedRepetition[key] = keyCounter;
+        dispatch(editUnclaimedRepetition({ unclaimedRepetition }));
         return Status.threefoldRepetition;
       }
     }

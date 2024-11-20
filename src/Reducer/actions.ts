@@ -102,9 +102,22 @@ const resetTheGame = () => {
 };
 
 const claimDraw = () => {
+  console.log("claim draw");
+
   return {
     type: actionTypes.CLAIM_DRAW,
     payload: {},
+  };
+};
+
+const editUnclaimedRepetition = ({
+  unclaimedRepetition,
+}: {
+  unclaimedRepetition: { [key: string]: number };
+}) => {
+  return {
+    type: actionTypes.EDIT_UNCLAIMED_REPETITION,
+    payload: { unclaimedRepetition },
   };
 };
 
@@ -121,4 +134,5 @@ export {
   updatePositionsHistory,
   resetTheGame,
   claimDraw,
+  editUnclaimedRepetition,
 };

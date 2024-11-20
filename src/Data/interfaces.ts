@@ -22,6 +22,9 @@ interface State {
     [key: string]: number;
   };
   drawClaimed: boolean;
+  unclaimedRepetition: {
+    [key: string]: number;
+  };
 }
 interface Action {
   type: string;
@@ -41,6 +44,9 @@ interface Action {
     };
     enPassantSquares?: Moves;
     positionsHistory?: {
+      [key: string]: number;
+    };
+    unclaimedRepetition?: {
       [key: string]: number;
     };
   };
@@ -129,6 +135,10 @@ interface GameStatusParams {
   positionsHistory: {
     [key: string]: number;
   };
+  unclaimedRepetition: {
+    [key: string]: number;
+  };
+  dispatch: (arg0: Action) => void;
 }
 type Moves = [number, number][];
 

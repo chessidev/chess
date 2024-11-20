@@ -20,6 +20,7 @@ const Pieces = () => {
     draw50,
     enPassantSquares,
     positionsHistory,
+    unclaimedRepetition,
   } = appState;
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -92,6 +93,8 @@ const Pieces = () => {
       draw50,
       counter,
       positionsHistory,
+      unclaimedRepetition,
+      dispatch,
     });
     if (status !== gameStatus) dispatch(changeStatus({ gameStatus: status }));
   }, [turn]);

@@ -17,7 +17,12 @@ const PopUp = () => {
   return (
     <div
       className={` duration-200 absolute top-0 left-0 z-50 items-center justify-center w-full h-full text-primary ${
-        gameStatus === Status.ongoing || !drawClaimed ? "hidden" : "flex"
+        gameStatus === Status.ongoing ||
+        ((gameStatus === Status.fiftyMoveRule ||
+          gameStatus === Status.threefoldRepetition) &&
+          !drawClaimed)
+          ? "hidden"
+          : "flex"
       }`}
     >
       <div className="p-8 bg-secondary border-4 border-primary rounded shadow-lg min-w-[40%] flex items-center justify-center flex-col">

@@ -116,6 +116,16 @@ export const reducer = (state: State, action: Action): State => {
       };
     }
 
+    case actionTypes.EDIT_UNCLAIMED_REPETITION: {
+      if (!action.payload.unclaimedRepetition) {
+        return state;
+      } else
+        return {
+          ...state,
+          unclaimedRepetition: action.payload.unclaimedRepetition,
+        };
+    }
+
     default:
       return state;
   }

@@ -10,25 +10,24 @@ const Control = () => {
   } = useAppContext();
 
   const clickHandler = () => {
+    console.log("claim draw clicked");
+
     dispatch(claimDraw());
   };
 
   const button = useRef<HTMLButtonElement>(null);
 
-  if (button.current) {
-    if (
-      gameStatus === Status.threefoldRepetition ||
-      gameStatus === Status.fiftyMoveRule
-    ) {
-      button.current.disabled = false;
-    } else button.current.disabled = true;
-  }
+  const disabledHandler =
+    gameStatus === Status.threefoldRepetition ||
+    gameStatus === Status.fiftyMoveRule
+      ? false
+      : true;
 
   return (
-    <div className="h-[600px] px-4 md:flex hidden flex-col justify-between">
+    <div className="h-[600px] ml-4 md:flex hidden flex-col justify-between bg-primary/10">
       <div className="notation h-[50%]"></div>
       <div>
-        <button ref={button} onClick={clickHandler} disabled>
+        <button ref={button} onClick={clickHandler} disabled={disabledHandler}>
           Claim Draw
         </button>
       </div>
