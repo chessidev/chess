@@ -8,7 +8,7 @@ import PromotionBox from "./components/PromotionBox/PromotionBox";
 const App = () => {
   return (
     <AppContext>
-      <div className="container relative flex items-center justify-center min-h-screen mx-auto">
+      <div className="container relative flex items-center justify-center min-h-[90vh] mx-auto">
         <div className="grid">
           <Board />
           <Pieces />

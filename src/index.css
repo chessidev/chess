@@ -19,7 +19,7 @@
     @apply grid grid-cols-8;
   }
   .square {
-    @apply w-[10vw] max-w-[75px] aspect-square relative;
+    @apply w-[12vw] max-w-[75px] aspect-square relative;
   }
   .pieceImageContainer {
     @apply flex items-center justify-center w-full h-full cursor-pointer;
