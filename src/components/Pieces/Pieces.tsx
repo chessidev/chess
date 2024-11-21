@@ -1,15 +1,27 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { files, filesNumbers, ranks } from "../../Data/ranksAndFiles";
 import Piece from "./Piece";
 import { useAppContext } from "../context/AppContext";
 import { performMove } from "../../arbiter/performMove";
-import { changeStatus, isKingInCheck } from "../../Reducer/actions";
+import {
+  changeStatus,
+  getCandidates,
+  isKingInCheck,
+  updateNotation,
+} from "../../Reducer/actions";
 import { getIsKingInCheck } from "../../arbiter/kingSafety";
 import { getGameStatus } from "../../arbiter/getGameStatus";
+import { Status } from "../../Data/gameStatus";
+import { getMoves } from "../../arbiter/getMoves";
 
 const Pieces = () => {
   const boardRef = useRef<HTMLDivElement>(null);
   const { appState, dispatch } = useAppContext();
+  const [selectedPiece, setSelectedPiece] = useState<{
+    piece: string;
+    fileNumber: number;
+    rank: number;
+  } | null>(null);
   const {
     candidates,
     turn,
@@ -21,6 +33,8 @@ const Pieces = () => {
     enPassantSquares,
     positionsHistory,
     unclaimedRepetition,
+    notation,
+    drawClaimed,
   } = appState;
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -54,6 +68,7 @@ const Pieces = () => {
       counter: appState.counter,
       enPassantSquares,
       positionsHistory,
+      notation,
     });
   };
 
@@ -74,6 +89,69 @@ const Pieces = () => {
     }
     return className;
   };
+
+  const handleClick = (fileNumber: number, rank: number) => {
+    const currentPosition = positions[positions.length - 1];
+    const clickedPiece = currentPosition[rank - 1][fileNumber - 1];
+
+    if (selectedPiece) {
+      // If clicking on a candidate square, perform the move
+      if (
+        candidates.some(
+          (candidate) => candidate[0] === fileNumber && candidate[1] === rank
+        )
+      ) {
+        performMove({
+          data: `${selectedPiece.piece},${selectedPiece.fileNumber},${selectedPiece.rank}`,
+          x: fileNumber,
+          y: rank,
+          positions,
+          candidates,
+          turn,
+          castle: appState.castle,
+          dispatch,
+          counter: appState.counter,
+          enPassantSquares: appState.enPassantSquares,
+          positionsHistory: appState.positionsHistory,
+          notation: appState.notation,
+        });
+        setSelectedPiece(null); // Deselect after move
+        return;
+      }
+
+      // Deselect if clicking on the same piece again
+      if (
+        selectedPiece.fileNumber === fileNumber &&
+        selectedPiece.rank === rank
+      ) {
+        setSelectedPiece(null);
+        dispatch(getCandidates({ candidates: [] })); // Clear candidates
+        return;
+      }
+    }
+
+    // Select the clicked piece if it matches the turn
+    if (clickedPiece && clickedPiece[0] === turn) {
+      setSelectedPiece({ piece: clickedPiece, fileNumber, rank });
+      const moves = getMoves({
+        piece: clickedPiece,
+        file: fileNumber,
+        rank,
+        positions,
+        turn,
+        castle: appState.castle,
+        isKingChecked: appState.isKingChecked,
+      });
+      dispatch(getCandidates({ candidates: moves })); // Show candidates
+    }
+  };
+
+  useEffect(() => {
+    if (drawClaimed) {
+      notation.push(["1/2 - 1/2"]);
+      dispatch(updateNotation({ notation }));
+    }
+  }, [drawClaimed]);
 
   useEffect(() => {
     const currentPosition = positions[positions.length - 1];
@@ -96,7 +174,37 @@ const Pieces = () => {
       unclaimedRepetition,
       dispatch,
     });
-    if (status !== gameStatus) dispatch(changeStatus({ gameStatus: status }));
+
+    // update notation
+    if (isKingChecked || status !== gameStatus) {
+      const notationSuffix =
+        status === Status.blackWin || status === Status.whiteWin
+          ? "#"
+          : isKingChecked
+          ? "+"
+          : "";
+      notation[notation.length - 1][notation[notation.length - 1].length - 1] +=
+        notationSuffix;
+      dispatch(updateNotation({ notation }));
+    }
+
+    if (status !== gameStatus) {
+      if (status === Status.blackWin) {
+        notation.push(["0 - 1"]);
+        dispatch(updateNotation({ notation }));
+      } else if (status === Status.whiteWin) {
+        notation.push(["1 - 0"]);
+        dispatch(updateNotation({ notation }));
+      } else if (
+        status === Status.draw75 ||
+        status === Status.insufficientMaterial ||
+        status === Status.stalemate
+      ) {
+        notation.push(["1/2 - 1/2"]);
+        dispatch(updateNotation({ notation }));
+      }
+      dispatch(changeStatus({ gameStatus: status }));
+    }
   }, [turn]);
 
   return (
@@ -112,7 +220,8 @@ const Pieces = () => {
             {files.map((file, index) => {
               return (
                 <div
-                  key={file + rank}
+                  onClick={() => handleClick(filesNumbers[index], rank)}
+                  key={file + "" + rank}
                   className={`square ${getClassName(
                     filesNumbers[index],
                     rank

@@ -25,6 +25,7 @@ interface State {
   unclaimedRepetition: {
     [key: string]: number;
   };
+  notation: string[][];
 }
 interface Action {
   type: string;
@@ -49,6 +50,7 @@ interface Action {
     unclaimedRepetition?: {
       [key: string]: number;
     };
+    notation?: string[][];
   };
 }
 interface GetMoves {
@@ -87,6 +89,7 @@ interface performMoveParam {
   positionsHistory: {
     [key: string]: number;
   };
+  notation: string[][];
   dispatch: (arg0: Action) => void;
 }
 interface PromotionParam {
@@ -100,6 +103,7 @@ interface PromotionParam {
   positionsHistory: {
     [key: string]: number;
   };
+  notation: string[][];
   dispatch: (arg0: Action) => void;
 }
 interface Castle {

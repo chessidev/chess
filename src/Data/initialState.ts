@@ -38,9 +38,10 @@ const initialState: State = {
   isKingChecked: false,
   gameStatus: Status.ongoing,
   enPassantSquares: [],
-  positionsHistory: new Object() as { [key: string]: number },
+  positionsHistory: {},
   drawClaimed: false,
-  unclaimedRepetition: new Object() as { [key: string]: number },
+  unclaimedRepetition: {},
+  notation: [],
 };
 const startingKey = generatePositionKey({
   position: startingPositions,
@@ -51,3 +52,4 @@ const startingKey = generatePositionKey({
 initialState.positionsHistory[startingKey] = 1;
 
 export default initialState;
+export { startingPositions };

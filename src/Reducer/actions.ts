@@ -102,8 +102,6 @@ const resetTheGame = () => {
 };
 
 const claimDraw = () => {
-  console.log("claim draw");
-
   return {
     type: actionTypes.CLAIM_DRAW,
     payload: {},
@@ -121,6 +119,13 @@ const editUnclaimedRepetition = ({
   };
 };
 
+const updateNotation = ({ notation }: { notation: string[][] }) => {
+  return {
+    type: actionTypes.UPDATE_NOTATION,
+    payload: { notation },
+  };
+};
+
 export {
   makeNewMove,
   getCandidates,
@@ -135,4 +140,5 @@ export {
   resetTheGame,
   claimDraw,
   editUnclaimedRepetition,
+  updateNotation,
 };

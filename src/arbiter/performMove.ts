@@ -1,4 +1,5 @@
 import { Moves, performMoveParam, PromotionParam } from "../Data/interfaces";
+import { files as boardFiles } from "../Data/ranksAndFiles";
 import {
   enPassant,
   getCandidates,
@@ -7,6 +8,7 @@ import {
   promotionDone,
   updateCastle,
   updateDraw50,
+  updateNotation,
   updatePositionsHistory,
 } from "../Reducer/actions";
 import { copyPositionsArray } from "../Utilities/copyPositionsArray";
@@ -25,11 +27,13 @@ const performMove = ({
   dispatch,
   enPassantSquares,
   positionsHistory,
+  notation,
 }: performMoveParam) => {
   const [piece, fileString, rankString] = data.split(",");
   const rank = Number(rankString);
   const fileNumber = Number(fileString);
   const enemy = turn === "w" ? "b" : "w";
+  let newNotaionMove = "";
 
   if (
     candidates.find(([file, rank]) => x === file && y === rank) &&
@@ -45,8 +49,19 @@ const performMove = ({
       rank !== y &&
       newPositions[y - 1][x - 1] === ""
     ) {
-      if (x === fileNumber + 1) newPositions[rank - 1][x - 1] = "";
-      else if (x === fileNumber - 1) newPositions[rank - 1][x - 1] = "";
+      if (x === fileNumber + 1) {
+        newPositions[rank - 1][x - 1] = "";
+        if (!newNotaionMove)
+          newNotaionMove = `${boardFiles[fileNumber - 1]}x${
+            boardFiles[x - 1]
+          }${y}`;
+      } else if (x === fileNumber - 1) {
+        newPositions[rank - 1][x - 1] = "";
+        if (!newNotaionMove)
+          newNotaionMove = `${boardFiles[fileNumber - 1]}x${
+            boardFiles[x - 1]
+          }${y}`;
+      }
     }
 
     // Castle
@@ -54,18 +69,36 @@ const performMove = ({
       if (x === 7) {
         newPositions[y - 1][5] = newPositions[y - 1][7];
         newPositions[y - 1][7] = "";
+        if (!newNotaionMove) newNotaionMove = "O-O";
       } else if (x === 3) {
         newPositions[y - 1][3] = newPositions[y - 1][0];
         newPositions[y - 1][0] = "";
+        if (!newNotaionMove) newNotaionMove = "O-O-O";
       }
     }
 
     // All Pieces
     newPositions[rank - 1][fileNumber - 1] = "";
     newPositions[y - 1][x - 1] = piece;
+    if (!newNotaionMove)
+      newNotaionMove = `${piece[1] === "p" ? "" : piece[1].toUpperCase()}${
+        currentPosition[y - 1][x - 1][0] === enemy && piece[1] === "p"
+          ? boardFiles[fileNumber - 1] + "x"
+          : currentPosition[y - 1][x - 1][0] === enemy
+          ? "x"
+          : ""
+      }${boardFiles[x - 1]}${y}`;
 
     // Promotion
     if (piece[1] === "p" && (y === 1 || y === 8)) {
+      // notation update
+      if (turn === "w") {
+        notation.push([newNotaionMove]);
+        dispatch(updateNotation({ notation }));
+      } else {
+        notation[notation.length - 1].push(newNotaionMove);
+        dispatch(updateNotation({ notation }));
+      }
       dispatch(promote({ x, y, piece, newPositions }));
     }
 
@@ -200,6 +233,15 @@ const performMove = ({
       else positionsHistory[newKey] = 1;
       dispatch(updatePositionsHistory({ positionsHistory }));
 
+      // notation update
+      if (turn === "w") {
+        notation.push([newNotaionMove]);
+        dispatch(updateNotation({ notation }));
+      } else {
+        notation[notation.length - 1].push(newNotaionMove);
+        dispatch(updateNotation({ notation }));
+      }
+
       // move done
       dispatch(makeNewMove({ newPositions }));
     }
@@ -218,6 +260,7 @@ const performPromotion = ({
   counter,
   castle,
   positionsHistory,
+  notation,
 }: PromotionParam) => {
   const newPositions = copyPositionsArray(positions);
   const enemy = turn === "w" ? "b" : "w";
@@ -238,6 +281,12 @@ const performPromotion = ({
   if (positionsHistory[newKey]) positionsHistory[newKey] += 1;
   else positionsHistory[newKey] = 1;
   dispatch(updatePositionsHistory({ positionsHistory }));
+
+  // update notaion
+  notation[notation.length - 1][
+    notation[notation.length - 1].length - 1
+  ] += `=${piece[1].toUpperCase()}`;
+  dispatch(updateNotation({ notation }));
 
   // move done
   dispatch(promotionDone({ newPositions }));

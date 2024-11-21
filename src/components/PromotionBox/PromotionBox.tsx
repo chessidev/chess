@@ -29,6 +29,7 @@ const PromotionBox = () => {
       isPromotion,
       castle,
       positionsHistory,
+      notation,
       promotion: { x: promotionFile, y: promotionRank },
     },
     dispatch,
@@ -50,6 +51,7 @@ const PromotionBox = () => {
       counter,
       castle,
       positionsHistory,
+      notation,
     });
   };
 

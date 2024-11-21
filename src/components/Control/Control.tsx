@@ -5,17 +5,17 @@ import { claimDraw } from "../../Reducer/actions";
 
 const Control = () => {
   const {
-    appState: { gameStatus },
+    appState: { gameStatus, notation },
     dispatch,
   } = useAppContext();
 
-  const clickHandler = () => {
-    console.log("claim draw clicked");
+  const notationDiv = useRef<HTMLDivElement>(null);
+  notationDiv.current?.scrollTo({
+    top: notationDiv.current.scrollHeight,
+    behavior: "smooth",
+  });
 
-    dispatch(claimDraw());
-  };
-
-  const button = useRef<HTMLButtonElement>(null);
+  const clickHandler = () => dispatch(claimDraw());
 
   const disabledHandler =
     gameStatus === Status.threefoldRepetition ||
@@ -24,10 +24,22 @@ const Control = () => {
       : true;
 
   return (
-    <div className="h-[600px] ml-4 md:flex hidden flex-col justify-between bg-primary/10">
-      <div className="notation h-[50%]"></div>
+    <div className="control">
+      <div className="notation" ref={notationDiv}>
+        {notation.map((turn, index) => (
+          <div className="relative pl-2 move-row" key={index}>
+            <span>
+              {turn[0][0] === "1" || turn[0][0] === "0" ? "" : `${index + 1}. `}
+              {turn[0]}
+            </span>
+            <span className="absolute -translate-y-1/2 black-move top-1/2 left-[6.5rem]">
+              {turn[1] || ""}
+            </span>
+          </div>
+        ))}
+      </div>
       <div>
-        <button ref={button} onClick={clickHandler} disabled={disabledHandler}>
+        <button onClick={clickHandler} disabled={disabledHandler}>
           Claim Draw
         </button>
       </div>

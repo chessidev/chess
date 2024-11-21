@@ -1,5 +1,6 @@
 import { actionTypes } from "../Data/actionTypes";
-import initialState from "../Data/initialState";
+import { Status } from "../Data/gameStatus";
+import { startingPositions } from "../Data/initialState";
 import { Action, State } from "../Data/interfaces";
 
 export const reducer = (state: State, action: Action): State => {
@@ -106,7 +107,38 @@ export const reducer = (state: State, action: Action): State => {
     }
 
     case actionTypes.RESET_GAME: {
-      return initialState;
+      return {
+        positions: [startingPositions],
+        turn: "w",
+        counter: 1,
+        draw50: {
+          counter50: 1,
+          turn: "w",
+        },
+        candidates: [],
+        isPromotion: false,
+        promotion: {
+          x: 0,
+          y: 0,
+        },
+        castle: {
+          w: {
+            king: true,
+            queen: true,
+          },
+          b: {
+            king: true,
+            queen: true,
+          },
+        },
+        isKingChecked: false,
+        gameStatus: Status.ongoing,
+        enPassantSquares: [],
+        positionsHistory: {},
+        drawClaimed: false,
+        unclaimedRepetition: {},
+        notation: [],
+      };
     }
 
     case actionTypes.CLAIM_DRAW: {
@@ -124,6 +156,13 @@ export const reducer = (state: State, action: Action): State => {
           ...state,
           unclaimedRepetition: action.payload.unclaimedRepetition,
         };
+    }
+
+    case actionTypes.UPDATE_NOTATION: {
+      return {
+        ...state,
+        notation: action.payload.notation || state.notation,
+      };
     }
 
     default:
