@@ -1,12 +1,12 @@
 import { files, filesNumbers, ranks } from "../../Data/ranksAndFiles";
-import wq from "../../assets/wq.png";
-import wn from "../../assets/wn.png";
-import wr from "../../assets/wr.png";
-import wb from "../../assets/wb.png";
-import bq from "../../assets/bq.png";
-import bn from "../../assets/bn.png";
-import br from "../../assets/br.png";
-import bb from "../../assets/bb.png";
+import wq from "../../assets/wq.webp";
+import wn from "../../assets/wn.webp";
+import wr from "../../assets/wr.webp";
+import wb from "../../assets/wb.webp";
+import bq from "../../assets/bq.webp";
+import bn from "../../assets/bn.webp";
+import br from "../../assets/br.webp";
+import bb from "../../assets/bb.webp";
 import { useAppContext } from "../context/AppContext";
 import { performPromotion } from "../../arbiter/performMove";
 const piecesObject: { [k: string]: string } = {

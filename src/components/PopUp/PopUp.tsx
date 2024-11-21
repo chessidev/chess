@@ -1,7 +1,7 @@
-import wk from "../../assets/wk.png";
+import wk from "../../assets/wk.webp";
 import { Status } from "../../Data/gameStatus";
 import { useAppContext } from "../context/AppContext";
-import bk from "../../assets/bk.png";
+import bk from "../../assets/bk.webp";
 import { resetTheGame } from "../../Reducer/actions";
 
 const PopUp = () => {
